@@ -23,7 +23,7 @@ Vector2f  ballSpeed;
 
 RectangleShape paddles[2];
 const Vector2f paddleSize(25.f, 100.f);
-const  float  paddleSpeed = 400.f;
+const  float  paddleSpeed = 800.f;
 
 bool server = false;
 
@@ -71,10 +71,10 @@ void update(RenderWindow &window) {
 
 
     float direction = 0.f;
-    if (Keyboard::isKeyPressed(controls[0])) {
+    if ((Keyboard::isKeyPressed(controls[0])) && (paddles[0].getPosition().y > 10 + (paddleSize.y / 2))) {
         direction--;
     }
-    if (Keyboard::isKeyPressed(controls[1])) {
+    if ((Keyboard::isKeyPressed(controls[1])) && (paddles[0].getPosition().y < gameHeight - 10 - (paddleSize.y / 2))) {
         direction++;
     }
     paddles[0].move(0, direction * paddleSpeed * dt);
