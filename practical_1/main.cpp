@@ -23,14 +23,19 @@ Vector2f  ballSpeed;
 
 RectangleShape paddles[2];
 const Vector2f paddleSize(25.f, 100.f);
-const  float  paddleSpeed = 800.f;
+const  float  paddleSpeed = 400.f;
 
 bool server = false;
 
+
+string ai_movement;
+string ballDirection;
+
 void reset() {
 
+    ballSpeed = {server ? -200.0f : 200.0f, 260.0f};
+    ballDirection = {server ? "left" : "right"};
     ball.setPosition(gameWidth / 2, gameHeight / 2);
-//    ball.setPosition(80, 250);
     paddles[0].setPosition(10 + (paddleSize.x / 2), gameHeight / 2);
     paddles[1].setPosition(gameWidth - 10 - (paddleSize.x / 2), gameHeight / 2);
 
@@ -42,7 +47,6 @@ void load() {
     ball.setFillColor(sf::Color(100, 150, 200));
     ball.setRadius(ballRadius);
     ball.setPointCount(100);
-    ballSpeed = {server ? 50.0f : -50.0f, 60.0f};
 
     paddles[0].setSize(paddleSize);
     paddles[0].setOrigin(paddleSize / 2.f);
@@ -56,18 +60,7 @@ void load() {
 
 }
 
-void update(RenderWindow &window) {
-
-    static sf::Clock clock; // should this go here?
-    const float dt = clock.restart().asSeconds();
-
-    sf::Event event;
-    while (window.pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-            window.close();
-    }
-
+void playerMove(const float dt) {
 
 
     float direction = 0.f;
@@ -79,16 +72,10 @@ void update(RenderWindow &window) {
     }
     paddles[0].move(0, direction * paddleSpeed * dt);
 
-    float direction2 = 0.f;
-    if (Keyboard::isKeyPressed(controls[2])) {
-        direction2--;
-    }
-    if (Keyboard::isKeyPressed(controls[3])) {
-        direction2++;
-    }
-    paddles[1].move(0, direction2 * paddleSpeed * dt);
 
+}
 
+void ballMove(const float dt) {
 
 
     ball.move(ballSpeed * dt);
@@ -122,10 +109,86 @@ void update(RenderWindow &window) {
             ballSpeed.x *= -1.1f;
             ballSpeed.y *= 1.1f;
 
+            if (ballDirection == "left") {
+                ballDirection = "right";
+            } else {
+                ballDirection = "left";
+            }
+
         }
 
 
     }
+
+
+}
+
+void AIMove(const float dt) {
+
+    if (ballDirection == "right") {
+
+        float ai = 0.f;
+
+        // if the ball is at least as far away as half the paddle size vertically
+
+        if (
+            (ball.getPosition().y - paddles[1].getPosition().y > paddleSize.y / 4) ||
+            (ball.getPosition().y - paddles[1].getPosition().y < paddleSize.y / -4)
+        ) {
+
+            // follow ball and log direction
+
+            if (ball.getPosition().y < paddles[1].getPosition().y) {
+                ai--;
+                ai_movement = "up";
+            }
+            if (ball.getPosition().y > paddles[1].getPosition().y) {
+                ai++;
+                ai_movement = "down";
+            }
+        } else {
+
+            // continue in current direction
+
+            if (ai_movement == "down") {
+                ai++;
+            } else if (ai_movement == "up") {
+                ai--;
+            }
+
+        }
+
+        if (
+            (paddles[1].getPosition().y + ai > 10 + (paddleSize.y / 2)) &&
+            (paddles[1].getPosition().y + ai < gameHeight - 10 - (paddleSize.y / 2))
+        ) {
+            paddles[1].move(0, ai * paddleSpeed * dt);
+        }
+
+    }
+
+
+}
+
+void update(RenderWindow &window) {
+
+    static sf::Clock clock; // should this go here?
+    const float dt = clock.restart().asSeconds();
+
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            window.close();
+    }
+
+    if (Keyboard :: isKeyPressed(Keyboard :: Escape)) {
+        window.close();
+    }
+
+    playerMove(dt);
+    ballMove(dt);
+    AIMove(dt);
 
 }
 
@@ -150,7 +213,7 @@ int main()
 
     // graphics card nearly dead, close automatically after a couple of seconds
     int x = 0;
-    while (x < 100) {
+    while (x < 1000) {
         x++;
 
         window.clear();
