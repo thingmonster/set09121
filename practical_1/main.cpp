@@ -1,5 +1,7 @@
 
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -27,21 +29,61 @@ const  float  paddleSpeed = 400.f;
 
 bool server = false;
 
-
 string ai_movement;
 string ballDirection;
 
+sf::Font font;
+sf::Text text;
+sf::Font yearFont;
+sf::Text yearText;
+sf::Font scoreFont;
+sf::Text scoreText;
+
+int playerScore = 0;
+int AIScore = 0;
+
+
+
 void reset() {
 
-    ballSpeed = {server ? -200.0f : 200.0f, 260.0f};
-    ballDirection = {server ? "left" : "right"};
+    if (playerScore + AIScore > 0) {
+
+        stringstream scores;
+        scores << "Player " << playerScore << "      Computer " << AIScore;
+        scoreText.setString(scores.str());
+        scoreText.setPosition((gameWidth * 0.5f) - (scoreText.getLocalBounds().width * 0.5f), gameHeight - 40);
+        cout << scoreText.getLocalBounds().height << endl;
+    }
+
+    ballSpeed = {server ? 200.0f : -200.0f, 260.0f};
+    ballDirection = {server ? "right" : "left"};
     ball.setPosition(gameWidth / 2, gameHeight / 2);
+    ball.setPosition(100,100);
     paddles[0].setPosition(10 + (paddleSize.x / 2), gameHeight / 2);
     paddles[1].setPosition(gameWidth - 10 - (paddleSize.x / 2), gameHeight / 2);
 
 }
 
 void load() {
+
+    font.loadFromFile("../res/fonts/Hawaii_Killer.ttf");
+    text.setFont(font);
+    text.setCharacterSize(120);
+    text.setColor(sf::Color(30,45,60));
+    text.setString("Epic Pong Battle");
+    text.setPosition((gameWidth * 0.5f) - (text.getLocalBounds().width * 0.5f), (gameHeight / 3) - text.getLocalBounds().height);
+
+    yearFont.loadFromFile("../res/fonts/AngelicWar.ttf");
+    yearText.setFont(yearFont);
+    yearText.setCharacterSize(200);
+    yearText.setColor(sf::Color(30,45,60));
+    yearText.setString("2018!!");
+    yearText.setPosition((gameWidth * 0.5f) - (yearText.getLocalBounds().width * 0.5f), (gameHeight / 3));
+
+    scoreFont.loadFromFile("../res/fonts/bummer.ttf");
+    scoreText.setFont(scoreFont);
+    scoreText.setCharacterSize(24);
+    scoreText.setColor(sf::Color(80, 120, 150));
 
     ball.setOrigin(ballRadius, ballRadius);
     ball.setFillColor(sf::Color(100, 150, 200));
@@ -91,7 +133,17 @@ void ballMove(const float dt) {
     }
 
     if ((bx > gameWidth - ballRadius) || (bx < ballRadius)) {
-        load();
+
+        if (bx > gameWidth - ballRadius) {
+            playerScore++;
+        }
+
+        if (bx < ballRadius) {
+            AIScore++;
+        }
+
+        reset();
+
     } else {
 
         if (
@@ -109,7 +161,7 @@ void ballMove(const float dt) {
             ballSpeed.x *= -1.1f;
             ballSpeed.y *= 1.1f;
 
-            if (ballDirection == "left") {
+            if (bx < gameWidth / 2) {
                 ballDirection = "right";
             } else {
                 ballDirection = "left";
@@ -194,14 +246,16 @@ void update(RenderWindow &window) {
 
 void render(RenderWindow &window) {
 
+    window.draw(text);
+    window.draw(yearText);
+    window.draw(scoreText);
     window.draw(paddles[0]);
     window.draw(paddles[1]);
     window.draw(ball);
 
 }
 
-int main()
-{
+int main() {
 
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
