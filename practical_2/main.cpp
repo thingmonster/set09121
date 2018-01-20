@@ -8,7 +8,7 @@ using namespace sf;
 using namespace std;
 
 sf::Texture spritesheet;
-
+std::vector<Ship *> ships;
 
 
 void reset() {
@@ -23,7 +23,7 @@ void load() {
 	}
 	
 	Invader* inv = new Invader(sf::IntRect(0, 0, 32, 32), { 100,100 });
-
+	ships.push_back(inv);
 }
 
 void update(RenderWindow &window) {
@@ -41,10 +41,18 @@ void update(RenderWindow &window) {
     if (Keyboard :: isKeyPressed(Keyboard :: Escape)) {
         window.close();
     }
+	
+	for (auto &s : ships) {
+		s->Update(dt);
+	}
 
 }
 
 void render(RenderWindow &window) {
+
+	for (const auto &s : ships) {
+		window.draw(*s);
+	}
 
 }
 
@@ -71,5 +79,18 @@ int main() {
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
