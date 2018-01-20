@@ -13,36 +13,49 @@ int invaders_columns = 12;
 
 sf::Texture spritesheet;
 
+
 class Ship : public sf::Sprite {
-	protected:
-		Ship() {};
-		sf::IntRect _sprite;
-
-	public:
-
-		Ship(IntRect ir) {
-			_sprite = ir;
-			setTexture(spritesheet);
-			setTextureRect(_sprite);
-		}
-
-	void Update(const float &dt) {}
-
+protected:
+	sf::IntRect _sprite;
+	Ship();
+public:
+	explicit Ship(sf::IntRect ir);
+	virtual ~Ship() = 0;
+	virtual void Update(const float &dt);
 };
 
+Ship::Ship() {};
+
+Ship::Ship(IntRect ir) : Sprite() {
+	_sprite = ir;
+	setTexture(spritesheet);
+	setTextureRect(_sprite);
+}
+
+void Ship::Update(const float &dt) {}
+
+Ship::~Ship() = default;
+
+
+ 
 class Invader : public Ship {
-	public:
-		Invader() : Ship() {}
-		Invader(sf::IntRect ir, sf::Vector2f pos) : Ship(ir) {
-			setOrigin(16, 16);
-			setPosition(pos);
-		}
-
-		void Update(const float &dt) {
-			Ship::Update(dt);
-		}
-
+public:
+	Invader(sf::IntRect ir, sf::Vector2f pos);
+	Invader();
+	void Update(const float &dt) override;
 };
+
+
+Invader::Invader() : Ship() {}
+Invader::Invader(sf::IntRect ir, sf::Vector2f pos) : Ship(ir) {
+	setOrigin(16, 16);
+	setPosition(pos);
+}
+
+void Invader::Update(const float &dt) {
+	Ship::Update(dt);
+}
+
 
 void reset() {
 
