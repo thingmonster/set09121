@@ -46,9 +46,9 @@ void Invader::Update(const float &dt) {
 
 	float newPos;
 	if (direction) {
-		newPos = 24;
+		newPos = .1;
 	} else {
-		newPos = -24;
+		newPos = -.1;
 	}
 	
 	for (int i = 0; i < ships.size(); i++) {

@@ -22,8 +22,15 @@ void load() {
 		// error...
 	}
 	
-	Invader* inv = new Invader(sf::IntRect(0, 0, 32, 32), { 100,100 });
-	ships.push_back(inv);
+	for (float r = 0; r < invaders_rows; r++) {
+		auto rect = sf::IntRect(r*32, r*32, 32, 32);	
+		for (float c = 0; c < invaders_columns; c++) {
+			Vector2f position = {c*40,r*40};
+			auto inv = new Invader(rect, position);
+			ships.push_back(inv);
+		}
+	}
+	
 }
 
 void update(RenderWindow &window) {
