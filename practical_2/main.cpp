@@ -1,60 +1,14 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "game.h"
+#include "ship.h"
 
 using namespace sf;
 using namespace std;
 
-
-int gameWidth = 800;
-int gameHeight = 600;
-int invaders_rows = 5;
-int invaders_columns = 12;
-
 sf::Texture spritesheet;
 
-
-class Ship : public sf::Sprite {
-protected:
-	sf::IntRect _sprite;
-	Ship();
-public:
-	explicit Ship(sf::IntRect ir);
-	virtual ~Ship() = 0;
-	virtual void Update(const float &dt);
-};
-
-Ship::Ship() {};
-
-Ship::Ship(IntRect ir) : Sprite() {
-	_sprite = ir;
-	setTexture(spritesheet);
-	setTextureRect(_sprite);
-}
-
-void Ship::Update(const float &dt) {}
-
-Ship::~Ship() = default;
-
-
- 
-class Invader : public Ship {
-public:
-	Invader(sf::IntRect ir, sf::Vector2f pos);
-	Invader();
-	void Update(const float &dt) override;
-};
-
-
-Invader::Invader() : Ship() {}
-Invader::Invader(sf::IntRect ir, sf::Vector2f pos) : Ship(ir) {
-	setOrigin(16, 16);
-	setPosition(pos);
-}
-
-void Invader::Update(const float &dt) {
-	Ship::Update(dt);
-}
 
 
 void reset() {
