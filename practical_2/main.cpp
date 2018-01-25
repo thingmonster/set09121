@@ -3,21 +3,23 @@
 #include <SFML/Graphics.hpp>
 #include "game.h"
 #include "ship.h"
+#include "bullet.h"
 
 using namespace sf;
 using namespace std;
 
 sf::Texture spritesheet;
 std::vector<Ship *> ships;
+Bullet bullets[256];
 
-
+		
 void reset() {
 
 }
 
 void load() {
- 
-	if (!spritesheet.loadFromFile("res/ss.jpg"))
+	
+	if (!spritesheet.loadFromFile("res/ss.png"))
 	{
 		cout << "error loading file" << endl;
 	}
@@ -27,10 +29,10 @@ void load() {
 	
 	for (float r = 0; r < invaders_rows; r++) {
 		
-		auto rect = sf::IntRect(r*32, r*32, 32, 32);	
+		auto rect = sf::IntRect(r*32, 0, 32, 32);	
 		
 		for (float c = 0; c < invaders_columns; c++) {
-			Vector2f position = {c*40,r*40};
+			Vector2f position = {c*40,r*40+40};
 			auto inv = new Invader(rect, position);
 			ships.push_back(inv);
 		}
@@ -40,22 +42,26 @@ void load() {
 
 void update(RenderWindow &window) {
 
-    static sf::Clock clock; // should this go here?
-    const float dt = clock.restart().asSeconds();
+	static sf::Clock clock;
+	const float dt = clock.restart().asSeconds();
 
-    sf::Event event;
-    while (window.pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-            window.close();
-    }
+	sf::Event event;
+	while (window.pollEvent(event))
+	{
+			if (event.type == sf::Event::Closed)
+					window.close();
+	}
 
-    if (Keyboard :: isKeyPressed(Keyboard :: Escape)) {
-        window.close();
-    }
-	
+	if (Keyboard :: isKeyPressed(Keyboard :: Escape)) {
+			window.close();
+	}
+
 	for (auto &s : ships) {
-		s->Update(dt);
+		s->Update(window, dt);
+	}
+
+	for (Bullet &b : bullets) {
+		b.Update(dt);
 	}
 
 }
@@ -65,6 +71,13 @@ void render(RenderWindow &window) {
 	for (const auto &s : ships) {
 		window.draw(*s);
 	}
+	
+	for (Bullet s : bullets) {
+		if (s.getVisibility()) {
+			window.draw(s);
+		}
+	}
+	
 
 }
 
@@ -75,7 +88,7 @@ int main() {
     settings.antialiasingLevel = 8;
 
     sf::RenderWindow window(sf::VideoMode(gameWidth,gameHeight), "Space Invaders");
-    window.setVerticalSyncEnabled(true); // does this go here?
+    window.setVerticalSyncEnabled(true);
     load();
 
 

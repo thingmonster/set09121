@@ -2,6 +2,7 @@
 #include <iostream>
 #include "game.h"
 #include "ship.h"
+#include "bullet.h"
 
 using namespace sf;
 using namespace std;
@@ -15,6 +16,11 @@ const Keyboard::Key controls[] = {
     Keyboard::Up
 };
 
+
+
+
+
+
 Ship::Ship() {};
 
 Ship::Ship(IntRect ir) : Sprite() {
@@ -23,9 +29,12 @@ Ship::Ship(IntRect ir) : Sprite() {
 	setTextureRect(_sprite);
 }
 
-void Ship::Update(const float &dt) {}
+void Ship::Update(const sf::RenderWindow &window, const float &dt) {}
 
 Ship::~Ship() = default;
+
+
+
 
 
 Invader::Invader() : Ship() {}
@@ -35,9 +44,9 @@ Invader::Invader(sf::IntRect ir, sf::Vector2f pos) : Ship(ir) {
 	direction = true;
 }
 
-void Invader::Update(const float &dt) {
+void Invader::Update(const sf::RenderWindow &window, const float &dt) {
 	
-	Ship::Update(dt);
+	Ship::Update(window, dt);
 	
 	move(dt * (direction ? 1.0f : -1.0f) * speed, 0);
 	
@@ -50,26 +59,38 @@ void Invader::Update(const float &dt) {
 
 }
 
+
+
+
+
 Player::Player() : Ship(IntRect (160,32,32,32)) {
 	setPosition({gameHeight * .5f, gameHeight - 32.f});
 	setOrigin(16,16);
 }
 
-void Player::Update(const float &dt) {
+void Player::Update(const sf::RenderWindow &window, const float &dt) {
 	
-	Ship::Update(dt);
+	Ship::Update(window, dt);
 	
+	if (Keyboard::isKeyPressed(controls[2])) {		
+		
+		sf::Vector2f pos = getPosition();
+		bullets[Bullet::getBulletPointer()].Fire(pos);
+	
+	}
+	
+
 	int direction = 0;
 	
-    if ((Keyboard::isKeyPressed(controls[0])) && (getPosition().x > 20)) {
+	if ((Keyboard::isKeyPressed(controls[0])) && (getPosition().x > 20)) {
 		direction--;
-    }
-	
-    if ((Keyboard::isKeyPressed(controls[1])) && (getPosition().x < gameWidth - 20)) {
+	}
+
+	if ((Keyboard::isKeyPressed(controls[1])) && (getPosition().x < gameWidth - 20)) {
 		direction++;
-    }
-	
-    move(direction * dt * 400, 0);
+	}
+
+	move(direction * dt * 400, 0);
 
 
 }
