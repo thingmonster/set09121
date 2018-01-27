@@ -9,6 +9,8 @@ using namespace std;
 
 bool Invader::direction = false;
 float Invader::speed = 100;
+// char Invader::label[2] = {'i', '\0'};
+// char Player::label[2] = {'p', '\0'};
 
 const Keyboard::Key controls[] = {
     Keyboard::Left,
@@ -75,7 +77,7 @@ void Player::Update(const sf::RenderWindow &window, const float &dt) {
 	if (Keyboard::isKeyPressed(controls[2])) {		
 		
 		sf::Vector2f pos = getPosition();
-		bullets[Bullet::getBulletPointer()].Fire(pos);
+		bullets[Bullet::getBulletPointer()].Fire(pos, false);
 	
 	}
 	
