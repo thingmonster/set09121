@@ -34,7 +34,7 @@ void Bullet::Fire(sf::Vector2f &pos, bool mode) {
 
 void Bullet::Update(const float &dt) {
 	if (visible) {
-		move(0, dt * 200.0f * (-1.9f));
+		move(0, dt * 200.0f * (_mode ? 1.9f : -1.9f));
 		const FloatRect boundingBox = getGlobalBounds();
 		
 		for (auto s : ships) {

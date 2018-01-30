@@ -67,6 +67,16 @@ void Invader::Update(const sf::RenderWindow &window, const float &dt) {
 		}
 	}
 
+	static float fireTime = 0.0f;
+	fireTime -= dt;
+	
+	if (fireTime <= 0 && rand() % 100 == 0) {
+		
+		sf::Vector2f pos = getPosition();
+		bullets[Bullet::getBulletPointer()].Fire(pos, true);
+		fireTime = .4f + rand() % 60;
+	}
+	
 }
 
 
@@ -82,10 +92,14 @@ void Player::Update(const sf::RenderWindow &window, const float &dt) {
 	
 	Ship::Update(window, dt);
 	
-	if (Keyboard::isKeyPressed(controls[2])) {		
+	static float fireTime = 0.0f;
+	fireTime -= dt;
+	
+	if (fireTime <= -0 && Keyboard::isKeyPressed(controls[2])) {		
 		
 		sf::Vector2f pos = getPosition();
 		bullets[Bullet::getBulletPointer()].Fire(pos, false);
+		fireTime = .7f;
 	
 	}
 	
