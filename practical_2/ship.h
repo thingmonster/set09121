@@ -6,10 +6,13 @@ class Ship : public sf::Sprite {
 	protected:
 		sf::IntRect _sprite;
 		Ship();
+		bool _exploded;
 	public:
 		explicit Ship(sf::IntRect ir);
 		virtual ~Ship() = 0;
 		virtual void Update(const sf::RenderWindow &window, const float &dt);
+		virtual void explode();
+		bool is_exploded() const;
 };
 
  

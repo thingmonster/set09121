@@ -9,8 +9,6 @@ using namespace std;
 
 bool Invader::direction = false;
 float Invader::speed = 100;
-// char Invader::label[2] = {'i', '\0'};
-// char Player::label[2] = {'p', '\0'};
 
 const Keyboard::Key controls[] = {
     Keyboard::Left,
@@ -29,11 +27,21 @@ Ship::Ship(IntRect ir) : Sprite() {
 	_sprite = ir;
 	setTexture(spritesheet);
 	setTextureRect(_sprite);
+	_exploded = false;
 }
 
 void Ship::Update(const sf::RenderWindow &window, const float &dt) {}
 
+void Ship::explode() {
+	setTextureRect(IntRect(128,32,32,32));
+	_exploded = true;
+}
+
 Ship::~Ship() = default;
+
+bool Ship::is_exploded() const {
+	return _exploded;
+}
 
 
 
