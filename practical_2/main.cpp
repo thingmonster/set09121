@@ -19,7 +19,7 @@ void reset() {
 
 void load() {
 	
-	if (!spritesheet.loadFromFile("res/ss.png"))
+	if (!spritesheet.loadFromFile("res/invaders_sheet.png"))
 	{
 		cout << "error loading file" << endl;
 	}
@@ -69,7 +69,9 @@ void update(RenderWindow &window) {
 void render(RenderWindow &window) {
 
 	for (const auto &s : ships) {
-		window.draw(*s);
+		if (s->visible) {
+			window.draw(*s);
+		}
 	}
 	
 	for (Bullet s : bullets) {

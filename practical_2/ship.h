@@ -11,7 +11,8 @@ class Ship : public sf::Sprite {
 		explicit Ship(sf::IntRect ir);
 		virtual ~Ship() = 0;
 		virtual void Update(const sf::RenderWindow &window, const float &dt);
-		virtual void explode();
+		virtual void explode(const float &dt);
+		bool visible;
 		bool is_exploded() const;
 };
 

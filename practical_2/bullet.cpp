@@ -39,15 +39,17 @@ void Bullet::Update(const float &dt) {
 		
 		for (auto s : ships) {
 			
-			if (!_mode && s != ships[0]) {
-				if (!s->is_exploded() && s->getGlobalBounds().intersects(boundingBox)) {
-					visible = false;
-					s->explode();
-				}
-			} else if (_mode && s == ships[0]) {
-				if (!s->is_exploded() && s->getGlobalBounds().intersects(boundingBox)) {
-					visible = false;
-					s->explode();
+			if (visible) {
+				if (!_mode && s != ships[0]) {
+					if (!s->is_exploded() && s->getGlobalBounds().intersects(boundingBox)) {
+						visible = false;
+						s->explode(dt);
+					}
+				} else if (_mode && s == ships[0]) {
+					if (!s->is_exploded() && s->getGlobalBounds().intersects(boundingBox)) {
+						visible = false;
+						s->explode(dt);
+					}
 				}
 			}
 		}

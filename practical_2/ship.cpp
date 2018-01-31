@@ -28,13 +28,31 @@ Ship::Ship(IntRect ir) : Sprite() {
 	setTexture(spritesheet);
 	setTextureRect(_sprite);
 	_exploded = false;
+	visible = true;
 }
 
 void Ship::Update(const sf::RenderWindow &window, const float &dt) {}
 
-void Ship::explode() {
+void Ship::explode(const float &dt) {
+	
 	setTextureRect(IntRect(128,32,32,32));
-	_exploded = true;
+	
+	static float timeofdeath = 0.0f;
+		
+	if (!_exploded) {
+		_exploded = true;
+		timeofdeath = .5f;
+			cout << "x  " << visible << endl;
+	}
+	
+	if (visible) {		
+		timeofdeath -= dt;
+		cout << timeofdeath << endl;
+		if (timeofdeath < 0) {
+			cout << "hi";
+			visible = false;
+		}
+	}
 }
 
 Ship::~Ship() = default;
@@ -66,6 +84,10 @@ void Invader::Update(const sf::RenderWindow &window, const float &dt) {
 			ships[i]->move(0, 24);
 		}
 	}
+	
+	if (is_exploded() && visible) {
+		explode(dt);
+	}
 
 	static float fireTime = 0.0f;
 	fireTime -= dt;
@@ -92,31 +114,37 @@ void Player::Update(const sf::RenderWindow &window, const float &dt) {
 	
 	Ship::Update(window, dt);
 	
-	static float fireTime = 0.0f;
-	fireTime -= dt;
-	
-	if (fireTime <= -0 && Keyboard::isKeyPressed(controls[2])) {		
+	if (is_exploded()) {	
+		if (visible) {
+			explode(dt);
+		}
+	} else {
 		
-		sf::Vector2f pos = getPosition();
-		bullets[Bullet::getBulletPointer()].Fire(pos, false);
-		fireTime = .7f;
-	
+		static float fireTime = 0.0f;
+		fireTime -= dt;
+		
+		if (fireTime <= 0 && Keyboard::isKeyPressed(controls[2])) {		
+			
+			sf::Vector2f pos = getPosition();
+			bullets[Bullet::getBulletPointer()].Fire(pos, false);
+			fireTime = .7f;
+		
+		}
+		
+
+		int direction = 0;
+		
+		if ((Keyboard::isKeyPressed(controls[0])) && (getPosition().x > 20)) {
+			direction--;
+		}
+
+		if ((Keyboard::isKeyPressed(controls[1])) && (getPosition().x < gameWidth - 20)) {
+			direction++;
+		}
+
+		move(direction * dt * 400, 0);
+
 	}
-	
-
-	int direction = 0;
-	
-	if ((Keyboard::isKeyPressed(controls[0])) && (getPosition().x > 20)) {
-		direction--;
-	}
-
-	if ((Keyboard::isKeyPressed(controls[1])) && (getPosition().x < gameWidth - 20)) {
-		direction++;
-	}
-
-	move(direction * dt * 400, 0);
-
-
 }
 
 
