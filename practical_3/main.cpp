@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "levelsystem.h"
 #include "game.h"
 #include "entity.h"
 #include "player.h"
@@ -52,7 +53,7 @@ int main() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
-    sf::RenderWindow window(sf::VideoMode(gameWidth,gameHeight), "Space Invaders");
+    sf::RenderWindow window(sf::VideoMode(gameWidth,gameHeight), "Maze");
     window.setVerticalSyncEnabled(true);
     load();
 
