@@ -19,6 +19,18 @@ void load() {
 	
 	Player* p = new Player();
 	entities.push_back(p);
+	
+	ls::loadLevelFile("res/maze_2.txt");
+	
+	for (size_t y = 0; y < ls::getHeight(); ++y) {
+		for (size_t x = 0; x < ls::getWidth(); ++x) {
+			// cout << ls::getTile({x, y});
+		}
+		cout << endl;
+		
+	}
+		
+	
 }
 
 void update(RenderWindow &window) {
@@ -44,7 +56,7 @@ void update(RenderWindow &window) {
 void render(RenderWindow &window) {
 
 	entities[0]->render(window);
-
+	ls::render(window);
 }
 
 
