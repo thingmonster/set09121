@@ -24,7 +24,7 @@ void load() {
 	
 	for (size_t y = 0; y < ls::getHeight(); ++y) {
 		for (size_t x = 0; x < ls::getWidth(); ++x) {
-			// cout << ls::getTile({x, y});
+			cout << ls::getTile({x, y});
 		}
 		cout << endl;
 		
@@ -82,17 +82,6 @@ int main() {
 
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

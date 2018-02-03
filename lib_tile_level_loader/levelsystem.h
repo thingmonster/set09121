@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "maths.h"
 
 #define ls LevelSystem
 
@@ -17,10 +18,8 @@ class LevelSystem {
 		static void setColor(TILE t, sf::Color c);
 		static int getWidth();
 		static int getHeight();
-		// static TILE getTile(sf::Vector2ul);
-		static TILE getTile();
-		// static sf::Vector2f getTilePosition(sf::Vector2ul);
-		static sf::Vector2f getTilePosition();
+		static TILE getTile(sf::Vector2ul);
+		static sf::Vector2f getTilePosition(sf::Vector2ul);
 		static TILE getTileAt(sf::Vector2f);
 		
 	protected:

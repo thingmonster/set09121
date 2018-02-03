@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include "levelsystem.h"
+#include "maths.h"
 #include <fstream>
 
 using namespace std;
@@ -32,9 +33,15 @@ int LevelSystem::getWidth() {
 
 
 
-sf::Vector2f getTilePosition() {
-	sf::Vector2f v = {0,0};
-	return v;
+LevelSystem::TILE LevelSystem::getTile(sf::Vector2ul) {
+	
+	return TILE::WALL;
+}
+
+sf::Vector2f LevelSystem::getTilePosition(sf::Vector2ul) {
+	
+	return {100,040};
+	
 }
 
 
@@ -122,16 +129,15 @@ void LevelSystem::buildSprites() {
 	for (size_t y = 0; y < LevelSystem::getHeight(); ++y) {
 		for (size_t x = 0; x < LevelSystem::getWidth(); ++x) {
 			auto s = make_unique<sf::RectangleShape>();
-			// s->setPosition(getTilePosition({x, y}));
-			// s->setSize(Vector2f(_tileSize, _tileSize));
-			// s->setFillColor(getColor(getTile({x, y})));
+			s->setPosition(getTilePosition({x, y}));
+			s->setSize(Vector2f(_tileSize, _tileSize));
+			s->setFillColor(getColor(getTile({x, y})));
 			_sprites.push_back(move(s)); 
 		}
 	}
 }
 
-		
-		
+
 		
 void LevelSystem::render(RenderWindow &window) {
 	for (size_t i = 0; i < _width * _height; ++i) {
