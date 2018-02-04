@@ -1,9 +1,11 @@
 #pragma once
 
 #include<SFML/System.hpp>
-#include<cmath>
 #include<iostream>
+#include<cmath>
 #include<vector>
+
+const double PI = 3.14159265359;
 
 namespace sf {
 	
@@ -12,7 +14,7 @@ namespace sf {
 	
 	// Returns the length of a sf:: vector
 	template <typename T> double length(const Vector2<T> &v) {
-		return 0;
+		return sqrt(pow(v.x, 2) + pow(v.y, 2));
 	}
 	
 	// return normalized sf:: vector
@@ -20,13 +22,13 @@ namespace sf {
 		Vector2<T> vector;
 		double l = length(v);
 		if (l != 0) {
-			vector.x = 0;
-			vector.y = 0;
+			vector.x /= l;
+			vector.y /= l;
 		}
 		return vector;
 	}
 	
-	// Allow casting from one sf:: vetor internal type to another
+	// Allow casting from one sf:: vector internal type to another
 	template <typename T, typename U>
 	Vector2<T> Vcast(const Vector2<U> &v) {
 		return Vector2<T>(static_cast<T>(v.x), static_cast<T>(v.y));
@@ -34,7 +36,8 @@ namespace sf {
 	
 	// Degrees to radians conversion
 	static double deg2rad(double degrees) {
-		return 0;
+		double radians = degrees / PI * 180;
+		return radians;
 	}
 	
 	// Rotate a sf:: vector by an angle(degrees)

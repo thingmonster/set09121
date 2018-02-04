@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+#include<cmath>
 
 #include <iostream>
 #include "levelsystem.h"
@@ -17,31 +19,39 @@ float LevelSystem::_tileSize(100.f);
 vector<std::unique_ptr<sf::RectangleShape>> LevelSystem::_sprites;
 
 std::map<LevelSystem::TILE, sf::Color> LevelSystem::_colours {
-	{WALL, Color::White}, {END, Color::Red}
+	{WALL, Color::White}, 
+	{START, Color::Red}, 
+	{END, Color::Green}, 
+	{EMPTY, Color::Black}, 
+	{WAYPOINT, Color::Blue}
 };
 
 
 
-int LevelSystem::getHeight() {
+size_t LevelSystem::getHeight() {
 	return _height;
 }
 
-int LevelSystem::getWidth() {
+size_t LevelSystem::getWidth() {
 	return _width;
 }
 
-
-
-
-LevelSystem::TILE LevelSystem::getTile(sf::Vector2ul) {
-	
-	return TILE::WALL;
+float LevelSystem::getTileSize() {
+	return _tileSize;
 }
 
-sf::Vector2f LevelSystem::getTilePosition(sf::Vector2ul) {
+
+LevelSystem::TILE LevelSystem::getTile(sf::Vector2ul v) {
 	
-	return {100,040};
+	size_t index = (v.y * _width) + v.x;
+	return _tiles[index];
+}
+
+sf::Vector2f LevelSystem::getTilePosition(sf::Vector2ul v) {
 	
+	float xPos = (v.x % _width) * _tileSize;
+	float yPos = v.y * _tileSize;
+	return {xPos, yPos};	
 }
 
 
@@ -134,6 +144,8 @@ void LevelSystem::buildSprites() {
 			s->setFillColor(getColor(getTile({x, y})));
 			_sprites.push_back(move(s)); 
 		}
+		cout << endl;
+		cout << endl;
 	}
 }
 

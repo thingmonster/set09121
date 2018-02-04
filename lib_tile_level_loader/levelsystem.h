@@ -16,10 +16,11 @@ class LevelSystem {
 		static void render(sf::RenderWindow &window);
 		static sf::Color getColor(TILE t);
 		static void setColor(TILE t, sf::Color c);
-		static int getWidth();
-		static int getHeight();
-		static TILE getTile(sf::Vector2ul);
-		static sf::Vector2f getTilePosition(sf::Vector2ul);
+		static size_t getWidth();
+		static size_t getHeight();
+		static float getTileSize();
+		static TILE getTile(sf::Vector2ul v);
+		static sf::Vector2f getTilePosition(sf::Vector2ul v);
 		static TILE getTileAt(sf::Vector2f);
 		
 	protected:
