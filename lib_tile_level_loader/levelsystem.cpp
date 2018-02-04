@@ -41,6 +41,8 @@ float LevelSystem::getTileSize() {
 }
 
 
+
+
 LevelSystem::TILE LevelSystem::getTile(sf::Vector2ul v) {
 	
 	size_t index = (v.y * _width) + v.x;
@@ -49,12 +51,31 @@ LevelSystem::TILE LevelSystem::getTile(sf::Vector2ul v) {
 
 sf::Vector2f LevelSystem::getTilePosition(sf::Vector2ul v) {
 	
-	float xPos = (v.x % _width) * _tileSize;
+	float xPos = v.x * _tileSize;
 	float yPos = v.y * _tileSize;
 	return {xPos, yPos};	
 }
 
-
+sf::Vector2f LevelSystem::getStartTile() {
+	
+	size_t index;
+	
+	for (size_t i = 0; i < 40; i++) {
+		if (_tiles[i] == START) {
+			index = i;
+		}
+	}
+	
+	size_t x = (index % _width);
+	size_t y = floor(index / _width);
+	
+	sf::Vector2f coords = getTilePosition({x,y});
+	
+	coords.x += _tileSize / 2;
+	coords.y += _tileSize / 2;
+	
+	return coords;
+}
 
 
 sf::Color LevelSystem::getColor(LevelSystem::TILE t) {
