@@ -6,6 +6,7 @@ class Player : public Entity {
 	
 	private:
 		float _speed;
+		float _momentum(float * timer);
 	
 	public:
 		void update(double dt) override;

@@ -14,29 +14,76 @@ const Keyboard::Key controls[] = {
     Keyboard::Down
 };
 
+float Player::_momentum(float * timer) {
+	
+	float move = 0;
+
+	move = _speed - pow( 210 - *timer * 20, 2);
+	if (move < 0) {
+		move = 0;
+		*timer = 0;
+	}
+
+	return move;
+	
+}
+
 void Player::update(double dt) {
 	
-	float moveX = 0;
-	float moveY = 0;
+	float moveLeft = 0;
+	float moveRight = 0;
+	float moveUp = 0;
+	float moveDown = 0;
+	
+	static float lastMoveLeft = 0.0f;
+	static float lastMoveRight = 0.0f;
+	static float lastMoveUp = 0.0f;
+	static float lastMoveDown = 0.0f;
+	lastMoveLeft -= dt;
+	lastMoveRight -= dt;
+	lastMoveUp -= dt;
+	lastMoveDown -= dt;
 	
 	if ((Keyboard::isKeyPressed(controls[0])) && (getPosition().x > 20)) {
-		moveX = -1;
+		lastMoveLeft = 10.f;
+		moveLeft = _speed * -1;
+	} else {
+		if (lastMoveLeft > 0) {
+			moveLeft = _momentum(&lastMoveLeft) * -1;
+		}
 	}
-
+	
 	if ((Keyboard::isKeyPressed(controls[1])) && (getPosition().x < gameWidth - 20)) {
-		moveX = 1;
+		lastMoveRight = 10.f;
+		moveRight = _speed;
+	} else {
+		if (lastMoveRight > 0) {
+			moveRight = _momentum(&lastMoveRight);
+		}
 	}
-
+	
 	if ((Keyboard::isKeyPressed(controls[2])) && (getPosition().y > 20)) {
-		moveY = -1;
+		lastMoveUp = 10.f;
+		moveUp = _speed * -1;
+	} else {
+		if (lastMoveUp > 0) {
+			moveUp = _momentum(&lastMoveUp) * -1;
+		}
 	}
-
+	
 	if ((Keyboard::isKeyPressed(controls[3])) && (getPosition().y < gameHeight - 20)) {
-		moveY = 1;
+		lastMoveDown = 10.f;
+		moveDown = _speed;
+	} else {
+		if (lastMoveDown > 0) {
+			moveDown = _momentum(&lastMoveDown);
+		}
 	}
-
-	_position.x += (moveX * dt * _speed);
-	_position.y += (moveY * dt * _speed);
+	
+	_position.x += (moveLeft * dt);
+	_position.x += (moveRight * dt);
+	_position.y += (moveUp * dt);
+	_position.y += (moveDown * dt);
 		
 	Entity::update(dt);
 }
