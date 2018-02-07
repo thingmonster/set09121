@@ -37,7 +37,7 @@ set_target_properties(PRACTICAL_2 PROPERTIES
 
 add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND}
 	-E copy_directory
-	"{PROJECT_SOURCE_DIR}/res/*"
+	"${PROJECT_SOURCE_DIR}/res"
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/res
 )
 add_dependencies(PRACTICAL_2 copy_resources)
