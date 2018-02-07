@@ -30,6 +30,8 @@ float Player::_momentum(float * timer) {
 
 void Player::update(double dt) {
 	
+	// player movement with momentum
+	
 	float moveLeft = 0;
 	float moveRight = 0;
 	float moveUp = 0;
@@ -39,6 +41,7 @@ void Player::update(double dt) {
 	static float lastMoveRight = 0.0f;
 	static float lastMoveUp = 0.0f;
 	static float lastMoveDown = 0.0f;
+	
 	lastMoveLeft -= dt;
 	lastMoveRight -= dt;
 	lastMoveUp -= dt;
@@ -80,10 +83,96 @@ void Player::update(double dt) {
 		}
 	}
 	
-	_position.x += (moveLeft * dt);
-	_position.x += (moveRight * dt);
-	_position.y += (moveUp * dt);
-	_position.y += (moveDown * dt);
+	
+	
+	// restrict player movement to maze path
+	
+	sf::Vector2ul newPos;
+	newPos.x = _position.x + (moveLeft * dt) + (moveRight * dt);
+	newPos.y = _position.y + (moveUp * dt) + (moveDown * dt);
+		
+		
+	float tileX = (floor(newPos.x / ls::getTileSize()) * ls::getTileSize()) + ls::getTileSize() / 2;
+	float tileY = (floor(newPos.y / ls::getTileSize()) * ls::getTileSize()) + ls::getTileSize() / 2;
+	
+	float max;
+	
+	if (moveUp + moveDown < 0) { // going up - check tiles above
+		
+		size_t destX = floor(tileX / ls::getTileSize());
+		size_t destY = floor(tileY / ls::getTileSize()) - 1;
+		max = 0;
+		
+		while ((destY * ls::getTileSize()) - ls::getTileSize() / 2 <= _position.y && max == 0 && destY >= 0) {
+			ls::TILE dest = ls::getTile({destX, destY});
+			
+			if (dest == ls::WALL) {
+				max = (destY + 1) * ls::getTileSize();
+				if (newPos.y < max + 25) {
+					newPos.y = max + 25;
+				}
+			}
+			destY--;
+		}
+	}
+	
+	if (moveUp + moveDown > 0) { // going down - check tiles below
+		
+		size_t destX = floor(tileX / ls::getTileSize());
+		size_t destY = floor(tileY / ls::getTileSize()) + 1;
+		max = 0;
+		
+		while ((destY * ls::getTileSize()) + ls::getTileSize() / 2 >= _position.y && max == 0 && destY <= ls::getHeight()) {
+			ls::TILE dest = ls::getTile({destX, destY});
+			
+			if (dest == ls::WALL) {
+				max = (destY - 0) * ls::getTileSize();
+				if (newPos.y > max - 25) {
+					newPos.y = max - 25;
+				}
+			}
+			destY++;
+		}
+	}
+	
+	if (moveRight + moveLeft > 0) { // going right - check tiles to right
+		
+		size_t destX = ceil(tileX / ls::getTileSize());
+		size_t destY = floor(tileY / ls::getTileSize());
+		max = 0;
+		
+		while ((destX * ls::getTileSize()) + ls::getTileSize() / 2 >= _position.x && max == 0 && destX <= ls::getWidth()) {
+			ls::TILE dest = ls::getTile({destX, destY});
+			if (dest == ls::WALL) {
+				max = destX * ls::getTileSize();
+				if (newPos.x > max - 25) {
+					newPos.x = max - 25;
+				}
+			}
+			destX++;
+		}
+	}
+	
+	if (moveRight + moveLeft < 0) { // going left - check tiles to left
+		
+		size_t destX = floor(tileX / ls::getTileSize()) - 1;
+		size_t destY = floor(tileY / ls::getTileSize());
+		max = 0;
+		
+		while ((destX * ls::getTileSize()) + ls::getTileSize() / 2 <= _position.x && max == 0 && destX >= 0) {
+			ls::TILE dest = ls::getTile({destX, destY});
+			if (dest == ls::WALL) {
+				max = (destX + 1) * ls::getTileSize();
+				if (newPos.x < max + 25) {
+					newPos.x = max + 25;
+				}
+			}
+			destX--;
+		}
+	}
+		
+	_position.x = newPos.x;
+	_position.y = (newPos.y);
 		
 	Entity::update(dt);
 }
