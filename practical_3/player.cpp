@@ -90,8 +90,9 @@ void Player::update(double dt) {
 	sf::Vector2ul newPos;
 	newPos.x = _position.x + (moveLeft * dt) + (moveRight * dt);
 	newPos.y = _position.y + (moveUp * dt) + (moveDown * dt);
-		
-		
+	
+	// get tile centre screen coordinates from player screen coordinates
+	
 	float tileX = (floor(newPos.x / ls::getTileSize()) * ls::getTileSize()) + ls::getTileSize() / 2;
 	float tileY = (floor(newPos.y / ls::getTileSize()) * ls::getTileSize()) + ls::getTileSize() / 2;
 	
@@ -99,11 +100,12 @@ void Player::update(double dt) {
 	
 	if (moveUp + moveDown < 0) { // going up - check tiles above
 		
+		// indexes for tile directly above
 		size_t destX = floor(tileX / ls::getTileSize());
 		size_t destY = floor(tileY / ls::getTileSize()) - 1;
 		max = 0;
 		
-		while ((destY * ls::getTileSize()) - ls::getTileSize() / 2 <= _position.y && max == 0 && destY >= 0) {
+		while (max == 0 && destY >= 0) {
 			ls::TILE dest = ls::getTile({destX, destY});
 			
 			if (dest == ls::WALL) {
@@ -114,15 +116,57 @@ void Player::update(double dt) {
 			}
 			destY--;
 		}
+		
+		// check upper right tile
+		if (newPos.x > tileX) {
+			
+			// get bottom right corner of this tile
+			int verticeX = tileX + ls::getTileSize() / 2;
+			int verticeY = tileY - ls::getTileSize() / 2;
+			
+			// calculate maximum available distance from current position
+			double sideP = verticeX - _position.x;
+			if (sideP < 25){
+				double sideV = sqrt(pow(25,2) - pow(sideP,2));
+				double maxDistance = _position.y - verticeY - sideV;
+				
+				// update destination if necessary
+				if (newPos.y < _position.y - maxDistance) {
+					newPos.y = _position.y - maxDistance;
+				}
+			}
+		}		
+		 
+		// check upper left tile
+		if (newPos.x < tileX) {
+		
+			// get top left corner of this tile
+			int verticeX = tileX - ls::getTileSize() / 2;
+			int verticeY = tileY - ls::getTileSize() / 2;
+		
+			// calculate maximum available distance from current position
+			double sideP = verticeX - _position.x;
+			if (sideP < 25) {
+				double sideV = sqrt(pow(25,2) - pow(sideP,2));
+				double maxDistance = _position.y - verticeY - sideV;
+
+				// update destination if necessary
+				if (newPos.y < _position.y - maxDistance) {
+					newPos.y = _position.y - maxDistance;
+				}
+			}
+		} 
+		
 	}
 	
 	if (moveUp + moveDown > 0) { // going down - check tiles below
 		
+		// indexes for tile directly below
 		size_t destX = floor(tileX / ls::getTileSize());
 		size_t destY = floor(tileY / ls::getTileSize()) + 1;
 		max = 0;
 		
-		while ((destY * ls::getTileSize()) + ls::getTileSize() / 2 >= _position.y && max == 0 && destY <= ls::getHeight()) {
+		while (max == 0 && destY <= ls::getHeight()) {
 			ls::TILE dest = ls::getTile({destX, destY});
 			
 			if (dest == ls::WALL) {
@@ -133,15 +177,58 @@ void Player::update(double dt) {
 			}
 			destY++;
 		}
+		
+		
+		// check lower right tile
+		if (newPos.x > tileX) {
+			
+			// get bottom right corner of this tile
+			int verticeX = tileX + ls::getTileSize() / 2;
+			int verticeY = tileY + ls::getTileSize() / 2;
+			
+			// calculate maximum available distance from current position
+			double sideP = verticeX - _position.x;
+			if (sideP < 25){
+				double sideV = sqrt(pow(25,2) - pow(sideP,2));
+				double maxDistance = verticeY - _position.y - sideV;
+				
+				// update destination if necessary
+				if (newPos.y > _position.y + maxDistance) {
+					newPos.y = _position.y + maxDistance;
+				}
+			}
+		}		
+		 
+		// check lower left tile
+		if (newPos.x < tileX) {
+		
+			// get bottom left corner of this tile
+			int verticeX = tileX - ls::getTileSize() / 2;
+			int verticeY = tileY + ls::getTileSize() / 2;
+		
+			// calculate maximum available distance from current position
+			double sideP = _position.x - verticeX;
+			if (sideP < 25) {
+				double sideV = sqrt(pow(25,2) - pow(sideP,2));
+				double maxDistance = verticeY - _position.y - sideV;
+
+				// update destination if necessary
+				if (newPos.y > _position.y + maxDistance) {
+					newPos.y = _position.y + maxDistance;
+				}
+			}
+		} 
+		
 	}
 	
 	if (moveRight + moveLeft > 0) { // going right - check tiles to right
 		
+		// indexes for tile directly to right
 		size_t destX = ceil(tileX / ls::getTileSize());
 		size_t destY = floor(tileY / ls::getTileSize());
 		max = 0;
 		
-		while ((destX * ls::getTileSize()) + ls::getTileSize() / 2 >= _position.x && max == 0 && destX <= ls::getWidth()) {
+		while (max == 0 && destX <= ls::getWidth()) {
 			ls::TILE dest = ls::getTile({destX, destY});
 			if (dest == ls::WALL) {
 				max = destX * ls::getTileSize();
@@ -151,15 +238,59 @@ void Player::update(double dt) {
 			}
 			destX++;
 		}
+		
+		// check upper right tile
+		if (newPos.y < tileY) {
+			
+			// get top right corner of this tile
+			int verticeX = tileX + ls::getTileSize() / 2;
+			int verticeY = tileY - ls::getTileSize() / 2;
+			
+			// calculate maximum available distance from current position
+			double sideP = _position.y - verticeY;
+			
+			if (sideP < 25) {
+				double sideV = sqrt(pow(25,2) - pow(sideP,2));
+				double maxDistance = verticeX - _position.x - sideV;
+
+				// update destination if necessary
+				if (newPos.x > _position.x + maxDistance) {
+					newPos.x = _position.x + maxDistance;
+				}
+			}
+		}		
+		
+		// check lower right tile
+		if (newPos.y > tileY) {
+		
+			// get bottom right corner of this tile
+			int verticeX = tileX + ls::getTileSize() / 2;
+			int verticeY = tileY + ls::getTileSize() / 2;
+		
+			// calculate maximum available distance from current position
+			double sideP = verticeY - _position.y;
+			
+			if (sideP < 25) {
+				double sideV = sqrt(pow(25,2) - pow(sideP,2));
+				double maxDistance = verticeX - _position.x - sideV;
+
+				// update destination if necessary
+				if (newPos.x > _position.x + maxDistance) {
+					newPos.x = _position.x + maxDistance;
+				}
+			}
+		}		
+		
 	}
 	
 	if (moveRight + moveLeft < 0) { // going left - check tiles to left
 		
+		// indexes for tiles directly to the left
 		size_t destX = floor(tileX / ls::getTileSize()) - 1;
 		size_t destY = floor(tileY / ls::getTileSize());
 		max = 0;
 		
-		while ((destX * ls::getTileSize()) + ls::getTileSize() / 2 <= _position.x && max == 0 && destX >= 0) {
+		while (max == 0 && destX >= 0) {
 			ls::TILE dest = ls::getTile({destX, destY});
 			if (dest == ls::WALL) {
 				max = (destX + 1) * ls::getTileSize();
@@ -168,6 +299,48 @@ void Player::update(double dt) {
 				}
 			}
 			destX--;
+		}
+		
+		// check upper left tile
+		if (newPos.y < tileY) {
+			
+			// get top left corner of this tile
+			int verticeX = tileX - ls::getTileSize() / 2;
+			int verticeY = tileY - ls::getTileSize() / 2;
+			
+			// calculate maximum available distance from current position
+			double sideP = _position.y - verticeY;
+			
+			if (sideP < 25) {
+				double sideV = sqrt(pow(25,2) - pow(sideP,2));
+				double maxDistance = _position.x - verticeX - sideV;
+
+				// update destination if necessary
+				if (newPos.x < _position.x - maxDistance) {
+					newPos.x = _position.x - maxDistance;
+				}
+			}		
+		}
+		
+		// check lower left tile
+		if (newPos.y > tileY) {
+		
+			// get bottom left corner of this tile
+			int verticeX = tileX - ls::getTileSize() / 2;
+			int verticeY = tileY + ls::getTileSize() / 2;
+		
+			// calculate maximum available distance from current position
+			double sideP = verticeY - _position.y;
+			
+			if (sideP < 25) {
+				double sideV = sqrt(pow(25,2) - pow(sideP,2));
+				double maxDistance = _position.x - verticeX - sideV;
+
+				// update destination if necessary
+				if (newPos.x < _position.x - maxDistance) {
+					newPos.x = _position.x - maxDistance;
+				}
+			}		
 		}
 	}
 		
