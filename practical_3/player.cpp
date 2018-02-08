@@ -14,9 +14,9 @@ const Keyboard::Key controls[] = {
     Keyboard::Down
 };
 
-float Player::_momentum(float * timer) {
+double Player::_momentum(double * timer) {
 	
-	float move = 0;
+	double move = 0;
 
 	move = _speed - pow( 210 - *timer * 20, 2);
 	if (move < 0) {
@@ -32,15 +32,15 @@ void Player::update(double dt) {
 	
 	// player movement with momentum
 	
-	float moveLeft = 0;
-	float moveRight = 0;
-	float moveUp = 0;
-	float moveDown = 0;
+	double moveLeft = 0;
+	double moveRight = 0;
+	double moveUp = 0;
+	double moveDown = 0;
 	
-	static float lastMoveLeft = 0.0f;
-	static float lastMoveRight = 0.0f;
-	static float lastMoveUp = 0.0f;
-	static float lastMoveDown = 0.0f;
+	static double lastMoveLeft = 0.0f;
+	static double lastMoveRight = 0.0f;
+	static double lastMoveUp = 0.0f;
+	static double lastMoveDown = 0.0f;
 	
 	lastMoveLeft -= dt;
 	lastMoveRight -= dt;
@@ -87,48 +87,57 @@ void Player::update(double dt) {
 	
 	// restrict player movement to maze path
 	
-	sf::Vector2ul newPos;
+	// get screen coordinates for player's new position
+	sf::Vector2f newPos;
 	newPos.x = _position.x + (moveLeft * dt) + (moveRight * dt);
 	newPos.y = _position.y + (moveUp * dt) + (moveDown * dt);
 	
-	// get tile centre screen coordinates from player screen coordinates
-	
-	float tileX = (floor(newPos.x / ls::getTileSize()) * ls::getTileSize()) + ls::getTileSize() / 2;
-	float tileY = (floor(newPos.y / ls::getTileSize()) * ls::getTileSize()) + ls::getTileSize() / 2;
+	// get tile centre screen coordinates from player screen coordinates	
+	sf::Vector2f tile;
+	tile.x = (floor(newPos.x / ls::getTileSize()) * ls::getTileSize()) + ls::getTileSize() / 2;
+	tile.y = (floor(newPos.y / ls::getTileSize()) * ls::getTileSize()) + ls::getTileSize() / 2;
 	
 	float max;
+	Vector2ul destination;
 	
-	if (moveUp + moveDown < 0) { // going up - check tiles above
+	
+	if (moveUp + moveDown < 0) { // going up
 		
-		// indexes for tile directly above
-		size_t destX = floor(tileX / ls::getTileSize());
-		size_t destY = floor(tileY / ls::getTileSize()) - 1;
+		
+		// check tiles directly above
+		
+		destination.x = floor(tile.x / ls::getTileSize());
+		destination.y = floor(tile.y / ls::getTileSize()) - 1;
+		
 		max = 0;
 		
-		while (max == 0 && destY >= 0) {
-			ls::TILE dest = ls::getTile({destX, destY});
+		while (max == 0 && destination.y >= 0) {
 			
-			if (dest == ls::WALL) {
-				max = (destY + 1) * ls::getTileSize();
+			if (ls::getTile(destination) == ls::WALL) {
+				max = (destination.y + 1) * ls::getTileSize();
 				if (newPos.y < max + 25) {
 					newPos.y = max + 25;
 				}
 			}
-			destY--;
+			destination.y--;
 		}
 		
+		
 		// check upper right tile
-		if (newPos.x > tileX) {
+		
+		if (newPos.x > tile.x) {
 			
 			// get bottom right corner of this tile
-			int verticeX = tileX + ls::getTileSize() / 2;
-			int verticeY = tileY - ls::getTileSize() / 2;
+			Vector2f vertice = {
+				tile.x + ls::getTileSize() / 2, 
+				tile.y - ls::getTileSize() / 2
+			};
 			
 			// calculate maximum available distance from current position
-			double sideP = verticeX - _position.x;
+			float sideP = vertice.x - _position.x;
 			if (sideP < 25){
-				double sideV = sqrt(pow(25,2) - pow(sideP,2));
-				double maxDistance = _position.y - verticeY - sideV;
+				float sideV = sqrt(pow(25.f,2) - pow(sideP,2));
+				float maxDistance = _position.y - vertice.y - sideV;
 				
 				// update destination if necessary
 				if (newPos.y < _position.y - maxDistance) {
@@ -137,18 +146,22 @@ void Player::update(double dt) {
 			}
 		}		
 		 
+		
 		// check upper left tile
-		if (newPos.x < tileX) {
+		
+		if (newPos.x < tile.x) {
 		
 			// get top left corner of this tile
-			int verticeX = tileX - ls::getTileSize() / 2;
-			int verticeY = tileY - ls::getTileSize() / 2;
-		
+			Vector2f vertice = {
+				tile.x - ls::getTileSize() / 2, 
+				tile.y - ls::getTileSize() / 2
+			};
+			
 			// calculate maximum available distance from current position
-			double sideP = verticeX - _position.x;
+			float sideP = vertice.x - _position.x;
 			if (sideP < 25) {
-				double sideV = sqrt(pow(25,2) - pow(sideP,2));
-				double maxDistance = _position.y - verticeY - sideV;
+				float sideV = sqrt(pow(25.f,2) - pow(sideP,2));
+				float maxDistance = _position.y - vertice.y - sideV;
 
 				// update destination if necessary
 				if (newPos.y < _position.y - maxDistance) {
@@ -158,39 +171,44 @@ void Player::update(double dt) {
 		} 
 		
 	}
-	
-	if (moveUp + moveDown > 0) { // going down - check tiles below
+	 
+	if (moveUp + moveDown > 0) { // going down
 		
-		// indexes for tile directly below
-		size_t destX = floor(tileX / ls::getTileSize());
-		size_t destY = floor(tileY / ls::getTileSize()) + 1;
+		
+		// check tiles directly below
+		
+		destination.x = floor(tile.x / ls::getTileSize());
+		destination.y = floor(tile.y / ls::getTileSize()) + 1;
+		
 		max = 0;
 		
-		while (max == 0 && destY <= ls::getHeight()) {
-			ls::TILE dest = ls::getTile({destX, destY});
+		while (max == 0 && destination.y <= ls::getHeight()) {
 			
-			if (dest == ls::WALL) {
-				max = (destY - 0) * ls::getTileSize();
+			if (ls::getTile(destination) == ls::WALL) {
+				max = destination.y * ls::getTileSize();
 				if (newPos.y > max - 25) {
 					newPos.y = max - 25;
 				}
 			}
-			destY++;
+			destination.y++;
 		}
 		
 		
+		
 		// check lower right tile
-		if (newPos.x > tileX) {
+		
+		if (newPos.x > tile.x) {
 			
 			// get bottom right corner of this tile
-			int verticeX = tileX + ls::getTileSize() / 2;
-			int verticeY = tileY + ls::getTileSize() / 2;
-			
+			Vector2f vertice = {
+				tile.x - ls::getTileSize() / 2, 
+				tile.y + ls::getTileSize() / 2
+			};
 			// calculate maximum available distance from current position
-			double sideP = verticeX - _position.x;
+			float sideP = vertice.x - _position.x;
 			if (sideP < 25){
-				double sideV = sqrt(pow(25,2) - pow(sideP,2));
-				double maxDistance = verticeY - _position.y - sideV;
+				float sideV = sqrt(pow(25.f,2) - pow(sideP,2));
+				float maxDistance = vertice.y - _position.y - sideV;
 				
 				// update destination if necessary
 				if (newPos.y > _position.y + maxDistance) {
@@ -199,18 +217,21 @@ void Player::update(double dt) {
 			}
 		}		
 		 
+		
 		// check lower left tile
-		if (newPos.x < tileX) {
+		
+		if (newPos.x < tile.x) {
 		
 			// get bottom left corner of this tile
-			int verticeX = tileX - ls::getTileSize() / 2;
-			int verticeY = tileY + ls::getTileSize() / 2;
-		
+			Vector2f vertice = {
+				tile.x - ls::getTileSize() / 2, 
+				tile.y + ls::getTileSize() / 2
+			};
 			// calculate maximum available distance from current position
-			double sideP = _position.x - verticeX;
+			float sideP = _position.x - vertice.x;
 			if (sideP < 25) {
-				double sideV = sqrt(pow(25,2) - pow(sideP,2));
-				double maxDistance = verticeY - _position.y - sideV;
+				float sideV = sqrt(pow(25.f,2) - pow(sideP,2));
+				float maxDistance = vertice.y - _position.y - sideV;
 
 				// update destination if necessary
 				if (newPos.y > _position.y + maxDistance) {
@@ -221,37 +242,43 @@ void Player::update(double dt) {
 		
 	}
 	
-	if (moveRight + moveLeft > 0) { // going right - check tiles to right
+	if (moveRight + moveLeft > 0) { // going right
 		
-		// indexes for tile directly to right
-		size_t destX = ceil(tileX / ls::getTileSize());
-		size_t destY = floor(tileY / ls::getTileSize());
+		
+		// check tiles directly to right
+		
+		destination.x = floor(tile.x / ls::getTileSize()) + 1;
+		destination.y = floor(tile.y / ls::getTileSize());
+		
 		max = 0;
 		
-		while (max == 0 && destX <= ls::getWidth()) {
-			ls::TILE dest = ls::getTile({destX, destY});
-			if (dest == ls::WALL) {
-				max = destX * ls::getTileSize();
+		while (max == 0 && destination.x <= ls::getWidth()) {
+			
+			if (ls::getTile(destination) == ls::WALL) {
+				max = destination.x * ls::getTileSize();
 				if (newPos.x > max - 25) {
 					newPos.x = max - 25;
 				}
 			}
-			destX++;
+			destination.x++;
 		}
 		
+		
 		// check upper right tile
-		if (newPos.y < tileY) {
+		
+		if (newPos.y < tile.y) {
 			
 			// get top right corner of this tile
-			int verticeX = tileX + ls::getTileSize() / 2;
-			int verticeY = tileY - ls::getTileSize() / 2;
-			
+			Vector2f vertice = {
+				tile.x + ls::getTileSize() / 2, 
+				tile.y - ls::getTileSize() / 2
+			};
 			// calculate maximum available distance from current position
-			double sideP = _position.y - verticeY;
+			float sideP = _position.y - vertice.y;
 			
 			if (sideP < 25) {
-				double sideV = sqrt(pow(25,2) - pow(sideP,2));
-				double maxDistance = verticeX - _position.x - sideV;
+				float sideV = sqrt(pow(25.f,2) - pow(sideP,2));
+				float maxDistance = vertice.x - _position.x - sideV;
 
 				// update destination if necessary
 				if (newPos.x > _position.x + maxDistance) {
@@ -259,20 +286,23 @@ void Player::update(double dt) {
 				}
 			}
 		}		
+		
 		
 		// check lower right tile
-		if (newPos.y > tileY) {
+		
+		if (newPos.y > tile.y) {
 		
 			// get bottom right corner of this tile
-			int verticeX = tileX + ls::getTileSize() / 2;
-			int verticeY = tileY + ls::getTileSize() / 2;
-		
+			Vector2f vertice = {
+				tile.x + ls::getTileSize() / 2, 
+				tile.y + ls::getTileSize() / 2
+			};
 			// calculate maximum available distance from current position
-			double sideP = verticeY - _position.y;
+			float sideP = vertice.y - _position.y;
 			
 			if (sideP < 25) {
-				double sideV = sqrt(pow(25,2) - pow(sideP,2));
-				double maxDistance = verticeX - _position.x - sideV;
+				float sideV = sqrt(pow(25.f,2) - pow(sideP,2));
+				float maxDistance = vertice.x - _position.x - sideV;
 
 				// update destination if necessary
 				if (newPos.x > _position.x + maxDistance) {
@@ -280,40 +310,45 @@ void Player::update(double dt) {
 				}
 			}
 		}		
-		
 	}
 	
-	if (moveRight + moveLeft < 0) { // going left - check tiles to left
+	if (moveRight + moveLeft < 0) { // going left
 		
-		// indexes for tiles directly to the left
-		size_t destX = floor(tileX / ls::getTileSize()) - 1;
-		size_t destY = floor(tileY / ls::getTileSize());
+		
+		// check tiles directly to the left
+		
+		destination.x = floor(tile.x / ls::getTileSize()) - 1;
+		destination.y = floor(tile.y / ls::getTileSize());
+		
 		max = 0;
 		
-		while (max == 0 && destX >= 0) {
-			ls::TILE dest = ls::getTile({destX, destY});
-			if (dest == ls::WALL) {
-				max = (destX + 1) * ls::getTileSize();
+		while (max == 0 && destination.x >= 0) {
+			
+			if (ls::getTile(destination) == ls::WALL) {
+				max = (destination.x + 1) * ls::getTileSize();
 				if (newPos.x < max + 25) {
 					newPos.x = max + 25;
 				}
 			}
-			destX--;
+			destination.x--;
 		}
 		
+		
 		// check upper left tile
-		if (newPos.y < tileY) {
+		
+		if (newPos.y < tile.y) { 
 			
 			// get top left corner of this tile
-			int verticeX = tileX - ls::getTileSize() / 2;
-			int verticeY = tileY - ls::getTileSize() / 2;
-			
+			Vector2f vertice = {
+				tile.x - ls::getTileSize() / 2, 
+				tile.y - ls::getTileSize() / 2
+			};
 			// calculate maximum available distance from current position
-			double sideP = _position.y - verticeY;
+			float sideP = _position.y - vertice.y;
 			
 			if (sideP < 25) {
-				double sideV = sqrt(pow(25,2) - pow(sideP,2));
-				double maxDistance = _position.x - verticeX - sideV;
+				float sideV = sqrt(pow(25.f,2) - pow(sideP,2));
+				float maxDistance = _position.x - vertice.x - sideV;
 
 				// update destination if necessary
 				if (newPos.x < _position.x - maxDistance) {
@@ -322,19 +357,22 @@ void Player::update(double dt) {
 			}		
 		}
 		
+		
 		// check lower left tile
-		if (newPos.y > tileY) {
+		
+		if (newPos.y > tile.y) {
 		
 			// get bottom left corner of this tile
-			int verticeX = tileX - ls::getTileSize() / 2;
-			int verticeY = tileY + ls::getTileSize() / 2;
-		
+			Vector2f vertice = {
+				tile.x - ls::getTileSize() / 2, 
+				tile.y + ls::getTileSize() / 2
+			};
 			// calculate maximum available distance from current position
-			double sideP = verticeY - _position.y;
+			float sideP = vertice.y - _position.y;
 			
 			if (sideP < 25) {
-				double sideV = sqrt(pow(25,2) - pow(sideP,2));
-				double maxDistance = _position.x - verticeX - sideV;
+				float sideV = sqrt(pow(25.f,2) - pow(sideP,2));
+				float maxDistance = _position.x - vertice.x - sideV;
 
 				// update destination if necessary
 				if (newPos.x < _position.x - maxDistance) {
@@ -343,7 +381,7 @@ void Player::update(double dt) {
 			}		
 		}
 	}
-		
+	
 	_position.x = newPos.x;
 	_position.y = (newPos.y);
 		
