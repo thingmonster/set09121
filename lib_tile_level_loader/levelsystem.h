@@ -22,7 +22,7 @@ class LevelSystem {
 		static TILE getTile(sf::Vector2ul v);
 		static sf::Vector2f getTilePosition(sf::Vector2ul v);
 		static TILE getTileAt(sf::Vector2f);
-		static sf::Vector2f getStartTile();
+		static sf::Vector2f getTileCoordinates(TILE t);
 		
 	protected:
 		static std::unique_ptr<TILE[]> _tiles;

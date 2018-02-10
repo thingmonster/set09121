@@ -9,10 +9,22 @@
 using namespace sf;
 using namespace std;
 
+
+sf::Font font;
+sf::Text youWin;
+sf::Text pressEnter;
+
 std::vector<Entity *> entities;
 
-void reset() {
+bool running = false;
 
+
+
+
+void reset() {
+	
+	entities[0]->setPosition(ls::getTileCoordinates(ls::START));
+	
 }
 
 void load() {
@@ -26,11 +38,32 @@ void load() {
 		cout << endl;
 		
 	}
-		
+			
+	font.loadFromFile("res/fonts/Rubik-Medium.ttf");
+	
+	
+	youWin.setFont(font);
+	youWin.setCharacterSize(50);
+	youWin.setColor(sf::Color(130,145,160));
+	youWin.setString("You Win");
+	youWin.setPosition(
+		(gameWidth * 0.5f) - (youWin.getLocalBounds().width * 0.5f), 
+		(gameHeight / 3) - youWin.getLocalBounds().height
+	);
+	
+	pressEnter.setFont(font);
+	pressEnter.setCharacterSize(50);
+	pressEnter.setColor(sf::Color(130,145,160));
+	pressEnter.setString("Press enter to play again");
+	pressEnter.setPosition(
+		(gameWidth * 0.5f) - (pressEnter.getLocalBounds().width * 0.5f), 
+		(gameHeight / 3) + pressEnter.getLocalBounds().height
+	);
 	
 	Player* p = new Player();
 	entities.push_back(p);
-	p->setPosition(ls::getStartTile());
+	
+	reset();
 	
 }
 
@@ -50,38 +83,55 @@ void update(RenderWindow &window) {
 			window.close();
 	}
 	
-	entities[0]->update(dt);
-
+	if (running) {
+		
+		if (!entities[0]->update(dt)) {
+			running = false;
+		}
+		
+	} else {
+		
+			
+		if (Keyboard :: isKeyPressed(Keyboard :: Return)) {
+			reset();
+			running = true;
+		}
+	
+	}
 }
 
 void render(RenderWindow &window) {
 
-	ls::render(window);
-	entities[0]->render(window);
+	if (running) {
+		ls::render(window);
+		entities[0]->render(window);
+	} else {
+		window.draw(youWin);
+		window.draw(pressEnter);
+	}
 }
-
 
 int main() {
 
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 8;
 
-    sf::RenderWindow window(sf::VideoMode(gameWidth,gameHeight), "Maze");
-    window.setVerticalSyncEnabled(true);
-    load();
+	sf::RenderWindow window(sf::VideoMode(gameWidth,gameHeight), "Maze");
+	window.setVerticalSyncEnabled(true);
+	load();
+	
+	running = true;
+	
+	while (true) {
 
+		window.clear();
+		update(window);
+		render(window);
+		window.display();
 
-    while (true) {
+	}
 
-        window.clear();
-        update(window);
-        render(window);
-        window.display();
-
-    }
-
-
-    return 0;
+	return 0;
 }
 
 

@@ -56,12 +56,12 @@ sf::Vector2f LevelSystem::getTilePosition(sf::Vector2ul v) {
 	return {xPos, yPos};	
 }
 
-sf::Vector2f LevelSystem::getStartTile() {
+sf::Vector2f LevelSystem::getTileCoordinates(TILE t) {
 	
 	size_t index;
 	
 	for (size_t i = 0; i < 40; i++) {
-		if (_tiles[i] == START) {
+		if (_tiles[i] == t) {
 			index = i;
 		}
 	}
@@ -177,8 +177,5 @@ void LevelSystem::render(RenderWindow &window) {
 		window.draw(*_sprites[i]);
 	}
 }
-		 
-		
-
 
 

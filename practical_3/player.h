@@ -9,7 +9,7 @@ class Player : public Entity {
 		double _momentum(double * timer);
 	
 	public:
-		void update(double dt) override;
+		bool update(double dt) override;
 		Player();
 		void render(sf::RenderWindow &window) const override;
 		

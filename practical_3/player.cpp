@@ -28,7 +28,7 @@ double Player::_momentum(double * timer) {
 	
 }
 
-void Player::update(double dt) {
+bool Player::update(double dt) {
 	
 	// player movement with momentum
 	
@@ -382,10 +382,37 @@ void Player::update(double dt) {
 		}
 	}
 	
-	_position.x = newPos.x;
-	_position.y = (newPos.y);
+	// check for intersection with end tile
+	
+	Vector2f endTile = ls::getTileCoordinates(ls::END);
+	if (
+		(_position.x + 25> endTile.x - ls::getTileSize() / 2) &&
+		(_position.x - 25 < endTile.x + ls::getTileSize() / 2) &&
+		(_position.y + 25 > endTile.y - ls::getTileSize() / 2) &&
+		(_position.y - 25 < endTile.y + ls::getTileSize() / 2)
+	) {
+	
+		lastMoveLeft = 0;
+		lastMoveRight = 0;
+		lastMoveUp = 0;
+		lastMoveDown = 0;
 		
-	Entity::update(dt);
+		
+		setPosition(ls::getTileCoordinates(ls::START));
+	
+		Entity::update(dt);
+		
+		return false;
+	
+	} else {
+		
+		_position.x = newPos.x;
+		_position.y = newPos.y;
+		
+		Entity::update(dt);
+		
+		return true;
+	}
 }
 
 Player::Player() : _speed(200.0f), Entity(make_unique<CircleShape>(25.f)) {
