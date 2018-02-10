@@ -47,7 +47,7 @@ bool Player::update(double dt) {
 	lastMoveUp -= dt;
 	lastMoveDown -= dt;
 	
-	if ((Keyboard::isKeyPressed(controls[0])) && (getPosition().x > 20)) {
+	if (Keyboard::isKeyPressed(controls[0])) {
 		lastMoveLeft = 10.f;
 		moveLeft = _speed * -1;
 	} else {
@@ -56,7 +56,7 @@ bool Player::update(double dt) {
 		}
 	}
 	
-	if ((Keyboard::isKeyPressed(controls[1])) && (getPosition().x < gameWidth - 20)) {
+	if (Keyboard::isKeyPressed(controls[1])) {
 		lastMoveRight = 10.f;
 		moveRight = _speed;
 	} else {
@@ -65,7 +65,7 @@ bool Player::update(double dt) {
 		}
 	}
 	
-	if ((Keyboard::isKeyPressed(controls[2])) && (getPosition().y > 20)) {
+	if (Keyboard::isKeyPressed(controls[2])) {
 		lastMoveUp = 10.f;
 		moveUp = _speed * -1;
 	} else {
@@ -74,7 +74,7 @@ bool Player::update(double dt) {
 		}
 	}
 	
-	if ((Keyboard::isKeyPressed(controls[3])) && (getPosition().y < gameHeight - 20)) {
+	if (Keyboard::isKeyPressed(controls[3])) {
 		lastMoveDown = 10.f;
 		moveDown = _speed;
 	} else {
