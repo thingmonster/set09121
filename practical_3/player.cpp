@@ -201,7 +201,7 @@ bool Player::update(double dt) {
 			
 			// get bottom right corner of this tile
 			Vector2f vertice = {
-				tile.x - ls::getTileSize() / 2, 
+				tile.x + ls::getTileSize() / 2, 
 				tile.y + ls::getTileSize() / 2
 			};
 			// calculate maximum available distance from current position
