@@ -56,6 +56,20 @@ set_target_properties(PRACTICAL_3 PROPERTIES
 )
 add_dependencies(PRACTICAL_3 copy_resources)
 
+
+####  Practical 4 ####
+file(GLOB_RECURSE SOURCES practical_4/*.cpp  practical_4/*.h)
+add_executable(PRACTICAL_4 ${SOURCES})
+target_include_directories(PRACTICAL_4 PRIVATE ${SFML_INCS})
+
+target_link_libraries(PRACTICAL_4 sfml-graphics)
+
+set_target_properties(PRACTICAL_4 PROPERTIES
+	VS_DEBUGGER_WORKING_DIRECTORY 
+	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+)
+add_dependencies(PRACTICAL_4 copy_resources)
+
 # Tile Loader Lib
 file(GLOB_RECURSE LOAD_TILES lib_tile_level_loader/*.cpp lib_tile_level_loader/*.h)
 add_library(lib_tile_level_loader STATIC ${LOAD_TILES})
