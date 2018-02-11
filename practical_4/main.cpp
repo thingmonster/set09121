@@ -1,9 +1,14 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "entity.h"
+#include "player.h"
+#include "ghost.h"
 
 using namespace sf;
 using namespace std;
+
+std::vector<Entity *> entities;
 
 static int gameWidth = 800;
 static int gameHeight = 600;
@@ -16,6 +21,14 @@ void reset() {
 
 void load() {
 	
+	
+	Player* p = new Player();
+	entities.push_back(p);
+	
+	for (int i = 0; i < 4; i++) {
+		Ghost* g = new Ghost();
+		entities.push_back(g);
+	}
 }
 
 void update(RenderWindow &window) {
@@ -34,10 +47,19 @@ void update(RenderWindow &window) {
 			window.close();
 	}
 	
+	for (auto &e : entities) {
+		e->update(dt);
+	}
+
 }
 
 void render(RenderWindow &window) {
 
+	for (auto &e : entities) {
+		e->render(window);
+	}
+
+	
 }
 
 int main() {
