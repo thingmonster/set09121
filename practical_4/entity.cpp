@@ -28,3 +28,18 @@ bool Entity::update(const double dt) {
 
 Entity::Entity(unique_ptr<Shape> s) : _radius(25.f), _shape(std::move(s)) {
 }
+
+void EntityManager::update(double dt) {
+	
+	for (auto &e : list) {
+		e->update(dt);
+	}
+}
+	
+void EntityManager::render(sf::RenderWindow &window) {
+	
+	for (auto &e : list) {
+		e->render(window);
+	}
+}
+	

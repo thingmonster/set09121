@@ -8,11 +8,12 @@
 using namespace sf;
 using namespace std;
 
-std::vector<Entity *> entities;
+
 
 static int gameWidth = 800;
 static int gameHeight = 600;
 
+EntityManager em;
 
 
 void reset() {
@@ -21,13 +22,12 @@ void reset() {
 
 void load() {
 	
-	
-	Player* p = new Player();
-	entities.push_back(p);
+	shared_ptr<Entity> p(new Player());	
+	em.list.push_back(p);
 	
 	for (int i = 0; i < 4; i++) {
-		Ghost* g = new Ghost();
-		entities.push_back(g);
+		shared_ptr<Entity> g(new Ghost());	
+		em.list.push_back(g);
 	}
 }
 
@@ -47,18 +47,13 @@ void update(RenderWindow &window) {
 			window.close();
 	}
 	
-	for (auto &e : entities) {
-		e->update(dt);
-	}
-
+	em.update(dt);
+	
 }
 
 void render(RenderWindow &window) {
 
-	for (auto &e : entities) {
-		e->render(window);
-	}
-
+	em.render(window);
 	
 }
 
