@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "entity.h"
+#include "system_renderer.h"
 #include "player.h"
 #include "ghost.h"
 
@@ -53,8 +54,8 @@ void update(RenderWindow &window) {
 
 void render(RenderWindow &window) {
 
-	em.render(window);
-	
+	em.render();
+	Renderer::render();
 }
 
 int main() {
@@ -66,6 +67,7 @@ int main() {
 	
 	sf::RenderWindow window(sf::VideoMode(gameWidth,gameHeight), "Pacman");
 	window.setVerticalSyncEnabled(true);
+	Renderer::initialise(window);
 	
 	while (true) {
 

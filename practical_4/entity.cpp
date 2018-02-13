@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include "entity.h"
+#include "system_renderer.h"
 
 using namespace sf;
 using namespace std;
@@ -29,6 +30,9 @@ bool Entity::update(const double dt) {
 Entity::Entity(unique_ptr<Shape> s) : _radius(25.f), _shape(std::move(s)) {
 }
 
+
+
+
 void EntityManager::update(double dt) {
 	
 	for (auto &e : list) {
@@ -36,10 +40,23 @@ void EntityManager::update(double dt) {
 	}
 }
 	
-void EntityManager::render(sf::RenderWindow &window) {
+void EntityManager::render() {
 	
 	for (auto &e : list) {
-		e->render(window);
+		e->render();
 	}
 }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	

@@ -10,6 +10,6 @@ class Player : public Entity {
 	public:
 		bool update(double dt) override;
 		Player();
-		void render(sf::RenderWindow &window) const override;
+		void render() const override;
 		
 };

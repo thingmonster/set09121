@@ -1,6 +1,7 @@
 
 #include <iostream>	
 #include "ghost.h"
+#include "system_renderer.h"
 
 
 using namespace sf;
@@ -47,6 +48,7 @@ Ghost::Ghost() : _speed(200.0f), Entity(make_unique<CircleShape>(25.f)) {
 	_direction = 1;
 }
 
-void Ghost::render(sf::RenderWindow &window) const {
-	window.draw(*_shape);
+void Ghost::render() const {
+	Renderer::queue(_shape.get());
+		
 }

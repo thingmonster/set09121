@@ -14,7 +14,7 @@ class Entity {
 		Entity() = delete;
 		virtual ~Entity() = default;
 		virtual bool update(const double dt);
-		virtual void render(sf::RenderWindow &window) const = 0;
+		virtual void render() const = 0;
 		const sf::Vector2f getPosition();
 		void setPosition(const sf::Vector2f &pos);
 		void move(const sf::Vector2f &pos);
@@ -25,5 +25,5 @@ class Entity {
 struct EntityManager {
 	std::vector<std::shared_ptr<Entity>> list;
 	void update(double dt);
-	void render(sf::RenderWindow &window);
+	void render();
 };

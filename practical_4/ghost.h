@@ -10,6 +10,6 @@ class Ghost : public Entity {
 	public:
 		bool update(double dt) override;
 		Ghost();
-		void render(sf::RenderWindow &window) const override;
+		void render() const override;
 		
 };
