@@ -5,23 +5,43 @@
 #include "system_renderer.h"
 #include "player.h"
 #include "ghost.h"
+#include "scene.h"
+#include "pacman.h"
+
 
 using namespace sf;
 using namespace std;
 
 
+// ================================================
+/* 
+GameScene::GameScene() : Scene() {cout << "hi";}
+void GameScene::update(double dt) {cout << "update" << endl;}
+void GameScene::render() {cout << "render" << endl;}
+void GameScene::load() {cout << "load" << endl;}
+
+std::shared_ptr<Scene> gameScene;
+std::shared_ptr<Scene> menuScene;
+std::shared_ptr<Scene> activeScene;
+ */
+
+
+// ================================================
 
 static int gameWidth = 800;
 static int gameHeight = 600;
 
 EntityManager em;
 
-
 void reset() {
 	
 }
 
 void load() {
+	
+	
+	gameScene.reset(new GameScene());
+	
 	
 	shared_ptr<Entity> p(new Player());	
 	em.list.push_back(p);
