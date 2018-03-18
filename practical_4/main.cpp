@@ -12,44 +12,23 @@
 using namespace sf;
 using namespace std;
 
-
-// ================================================
-/* 
-GameScene::GameScene() : Scene() {cout << "hi";}
-void GameScene::update(double dt) {cout << "update" << endl;}
-void GameScene::render() {cout << "render" << endl;}
-void GameScene::load() {cout << "load" << endl;}
-
-std::shared_ptr<Scene> gameScene;
-std::shared_ptr<Scene> menuScene;
-std::shared_ptr<Scene> activeScene;
- */
-
-
-// ================================================
-
 static int gameWidth = 800;
 static int gameHeight = 600;
-
-EntityManager em;
 
 void reset() {
 	
 }
 
 void load() {
-	
-	
+		
 	gameScene.reset(new GameScene());
+	menuScene.reset(new MenuScene());
 	
+	gameScene->load();
+	menuScene->load();
 	
-	shared_ptr<Entity> p(new Player());	
-	em.list.push_back(p);
+	activeScene = menuScene;
 	
-	for (int i = 0; i < 4; i++) {
-		shared_ptr<Entity> g(new Ghost());	
-		em.list.push_back(g);
-	}
 }
 
 void update(RenderWindow &window) {
@@ -68,13 +47,13 @@ void update(RenderWindow &window) {
 			window.close();
 	}
 	
-	em.update(dt);
+	activeScene->update(dt);
 	
 }
 
 void render(RenderWindow &window) {
 
-	em.render();
+	activeScene->render();
 	Renderer::render();
 }
 

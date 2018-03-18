@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "entity.h"
+#include "player.h"
+#include "ghost.h"
 
 class Scene {
 	

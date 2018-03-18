@@ -1,5 +1,6 @@
 #pragma once
 #include "scene.h"
+#include "system_renderer.h"
 
 extern std::shared_ptr<Scene> gameScene;
 extern std::shared_ptr<Scene> menuScene;
@@ -24,15 +25,16 @@ class GameScene : public Scene {
 
 class MenuScene : public Scene {
 	
-		private:
-			sf::Text text;
-			
-		public:
-			MenuScene() = default;
-			void update(double dt) override;
-			void render() override;
-			void load() override;
-	
+	private:
+		sf::Text text;
+		sf::Font font;
+		
+	public:
+		MenuScene();
+		void update(double dt) override;
+		void render() override;
+		void load() override;
+
 };
 
 
