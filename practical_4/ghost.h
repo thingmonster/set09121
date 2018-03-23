@@ -1,5 +1,6 @@
 #pragma once
 #include "entity.h"
+#include "ecm.h"
 
 class Ghost : public Entity {
 	
@@ -8,8 +9,8 @@ class Ghost : public Entity {
 		float _direction;
 	
 	public:
-		bool update(double dt) override;
+		void update(double dt) override;
 		Ghost();
-		void render() const override;
+		void render() override;
 		
 };

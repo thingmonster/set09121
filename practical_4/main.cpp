@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "ecm.h"
 #include "entity.h"
 #include "system_renderer.h"
 #include "player.h"

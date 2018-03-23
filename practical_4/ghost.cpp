@@ -7,7 +7,7 @@
 using namespace sf;
 using namespace std;
 
-bool Ghost::update(double dt) {
+void Ghost::update(double dt) {
 	
 	// 3% chance the ghost will change direction
 	// 97% chance it will continue on its current path
@@ -37,8 +37,6 @@ bool Ghost::update(double dt) {
 	
 	Entity::update(dt);
 		
-	return true;
-	
 }
 
 Ghost::Ghost() : _speed(200.0f), Entity(make_unique<CircleShape>(25.f)) {
@@ -48,7 +46,7 @@ Ghost::Ghost() : _speed(200.0f), Entity(make_unique<CircleShape>(25.f)) {
 	_direction = 1;
 }
 
-void Ghost::render() const {
+void Ghost::render() {
 	Renderer::queue(_shape.get());
 		
 }

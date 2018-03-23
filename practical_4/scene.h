@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "entity.h"
+#include "ecm.h"
 #include "player.h"
 #include "ghost.h"
 

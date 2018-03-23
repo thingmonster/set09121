@@ -29,7 +29,7 @@ double Player::_momentum(double * timer) {
 	
 }
 
-bool Player::update(double dt) {
+void Player::update(double dt) {
 		
 	// player movement with momentum
 	
@@ -92,8 +92,6 @@ bool Player::update(double dt) {
 	_position.y += (moveUp * dt) + (moveDown * dt);
 	
 	Entity::update(dt);
-		
-	return true;
 	
 }
 
@@ -103,7 +101,7 @@ Player::Player() : _speed(200.0f), Entity(make_unique<CircleShape>(25.f)) {
 	setPosition({400,300});
 }
 
-void Player::render() const {
+void Player::render() {
 	Renderer::queue(_shape.get());
 }
 

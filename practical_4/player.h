@@ -1,5 +1,6 @@
 #pragma once
 #include "entity.h"
+#include "ecm.h"
 
 class Player : public Entity {
 	
@@ -8,8 +9,8 @@ class Player : public Entity {
 		double _momentum(double * timer);
 	
 	public:
-		bool update(double dt) override;
+		void update(double dt) override;
 		Player();
-		void render() const override;
+		void render() override;
 		
 };

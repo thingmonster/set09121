@@ -1,4 +1,5 @@
 #pragma once
+#include "ecm.h"
 #include "scene.h"
 #include "system_renderer.h"
 
