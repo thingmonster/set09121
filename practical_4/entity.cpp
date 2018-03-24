@@ -1,12 +1,28 @@
 
 #include <iostream>
 #include "entity.h"
-#include "system_renderer.h"
 
 using namespace sf;
 using namespace std;
 
-// Parent::Parent() {}
+
+
+void EntityManager::update(double dt) {
+	
+	for (auto &e : list) {
+		e->update(dt);
+	}
+}
+	
+void EntityManager::render() {
+	for (auto &e : list) {
+		cout << e->_components.size() << endl;
+		for (auto &c : e->_components) {
+			c->render();
+		}
+	}
+}
+	
 	
 	
 	

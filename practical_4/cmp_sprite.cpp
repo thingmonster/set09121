@@ -4,7 +4,6 @@
 #include "cmp_sprite.h"
 #include "entity.h"
 #include "ecm.h"
-#include "player.h"
 #include "system_renderer.h"
 
 

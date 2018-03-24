@@ -35,20 +35,32 @@ void Entity::update(const double dt) {
 Entity::Entity(unique_ptr<Shape> s) : _radius(25.f), _shape(std::move(s)) {
 }
 
+Entity::Entity() {
+}
 
-void EntityManager::update(double dt) {
+
+
+
+
+
+
+
+
+
+
+// void EntityManager::update(double dt) {
 	
-	for (auto &e : list) {
-		e->update(dt);
-	}
-}
+	// for (auto &e : list) {
+		// e->update(dt);
+	// }
+// }
 	
-void EntityManager::render() {
+// void EntityManager::render() {
 	
-	for (auto &e : list) {
-		e->render();
-	}
-}
+	// for (auto &e : list) {
+		// e->render();
+	// }
+// }
 	
 	
 	

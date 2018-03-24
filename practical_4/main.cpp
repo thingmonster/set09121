@@ -4,8 +4,6 @@
 #include "ecm.h"
 #include "entity.h"
 #include "system_renderer.h"
-#include "player.h"
-#include "ghost.h"
 #include "scene.h"
 #include "pacman.h"
 #include "cmp_sprite.h"

@@ -1,4 +1,4 @@
-
+/* 
 #include <iostream>	
 #include "ghost.h"
 #include "system_renderer.h"
@@ -49,4 +49,4 @@ Ghost::Ghost() : _speed(200.0f), Entity(make_unique<CircleShape>(25.f)) {
 void Ghost::render() {
 	Renderer::queue(_shape.get());
 		
-}
+} */

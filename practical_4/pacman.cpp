@@ -3,6 +3,8 @@
 #include "pacman.h"
 #include "system_renderer.h"
 
+#define GHOSTS_COUNT 4
+
 using namespace sf;
 using namespace std;
 
@@ -31,19 +33,36 @@ void GameScene::update(double dt) {
 }
 
 void GameScene::render() {
-	em.render();
+	_ents.render();
 }
 
 void GameScene::load() {
 
-	shared_ptr<Entity> p(new Player());	
-	em.list.push_back(p);
+	auto pl = make_shared<Entity>();
+	auto s = pl->addComponent<ShapeComponent>();
+	s->setShape<sf::CircleShape>(12.f);
+	s->getShape().setFillColor({208 , 62, 25});
+	s->getShape().setOrigin(Vector2f(12.f, 12.f));
+	s->getShape().setPosition(Vector2f(300.f, 300.f));
+	_ents.list.push_back(pl);
 	
-	for (int i = 0; i < 4; i++) {
-		shared_ptr<Entity> g(new Ghost());
-		em.list.push_back(g);
+	const sf::Color ghost_cols[]{
+		{208,62,25},
+		{219,133,28},
+		{70,191,238},
+		{234,130,229}
+	};
+	
+	for (int i = 0; i < GHOSTS_COUNT; ++i) {
+		auto ghost = make_shared<Entity>();
+		auto s = ghost->addComponent<ShapeComponent>();
+		s->setShape<sf::CircleShape>(12.f);
+		s->getShape().setFillColor(ghost_cols[i%4]);
+		s->getShape().setOrigin(Vector2f(12.f, 12.f));
+		s->getShape().setPosition(Vector2f(i*50.f, i*50.f));
+		_ents.list.push_back(ghost);
 	}
-	
+
 	
 }
 

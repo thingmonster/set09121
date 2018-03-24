@@ -1,4 +1,4 @@
-
+/* 
 #include <iostream>	
 #include "player.h"
 #include "system_renderer.h"
@@ -106,3 +106,4 @@ void Player::render() {
 }
 
 
+ */

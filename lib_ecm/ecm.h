@@ -14,30 +14,40 @@ class Component;
 class Entity {
 	
 	protected:
-		std::vector<std::shared_ptr<Component>> _components;
 		std::unique_ptr<sf::Shape> _shape;
 		sf::Vector2f _position;
 		Entity(std::unique_ptr<sf::Shape> shp);
 		float _radius;
 		
 	public:
-		Entity() = delete;
-		virtual ~Entity() = default;
-		virtual void update(const double dt);
-		virtual void render() = 0;
+		Entity();
+		~Entity() = default;
+		void update(const double dt);
+		void render();
 		const sf::Vector2f getPosition();
 		void setPosition(const sf::Vector2f &pos);
 		void move(const sf::Vector2f &pos);
 		float getRadius();
+		std::vector<std::shared_ptr<Component>> _components;
 		
+	template <typename T, typename... Targs>
+	std::shared_ptr<T> addComponent(Targs... params) {
+		static_assert(std::is_base_of<Component, T>::value, "T != component");
+		std::shared_ptr<T> sp(std::make_shared<T>(this, params...));
+		_components.push_back(sp);
+		return sp;
+	}
+
+	
+	
 };
 
 
-struct EntityManager {
-	std::vector<std::shared_ptr<Entity>> list;
-	void update(double dt);
-	void render();
-};
+// struct EntityManager {
+	// std::vector<std::shared_ptr<Entity>> list;
+	// void update(double dt);
+	// void render();
+// };
 
 
 
@@ -60,14 +70,6 @@ class Component {
 };
 
 
-
-template <typename T, typename... Targs>
-std::shared_ptr<T> addComponent(Targs... params) {
-	static_assert(std::is_base_of<Component, T>::value, "T != component");
-	std::shared_ptr<T> sp(std::make_shared<T>(this, params...));
-	_components.push_back(sp);
-	return sp;
-}
 
 
 
