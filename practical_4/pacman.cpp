@@ -40,7 +40,7 @@ void GameScene::load() {
 	em.list.push_back(p);
 	
 	for (int i = 0; i < 4; i++) {
-		shared_ptr<Entity> g(new Ghost());	
+		shared_ptr<Entity> g(new Ghost());
 		em.list.push_back(g);
 	}
 	

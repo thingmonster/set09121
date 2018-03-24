@@ -2,6 +2,7 @@
 #include "ecm.h"
 #include "scene.h"
 #include "system_renderer.h"
+#include "cmp_sprite.h"
 
 extern std::shared_ptr<Scene> gameScene;
 extern std::shared_ptr<Scene> menuScene;

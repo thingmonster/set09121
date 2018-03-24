@@ -8,6 +8,7 @@
 #include "ghost.h"
 #include "scene.h"
 #include "pacman.h"
+#include "cmp_sprite.h"
 
 
 using namespace sf;

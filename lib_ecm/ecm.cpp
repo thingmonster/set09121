@@ -4,7 +4,14 @@
 
 using namespace sf;
 using namespace std;
+	
 
+		
+	
+	
+	
+	
+	
 const Vector2f Entity::getPosition() {
 	return _position;
 }
@@ -45,10 +52,9 @@ void EntityManager::render() {
 	
 	
 	
-	
-	
-	
-	
+Component::Component(Entity *p) {}
+void Component::update(double dt) {}
+void Component::render() {}
 	
 	
 	
