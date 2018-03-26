@@ -13,6 +13,10 @@ void Renderer::initialise(sf::RenderWindow &r) {
 	rw = &r;
 }
 
+sf::RenderWindow &Renderer::getWindow() {
+	return *rw;
+}
+
 void Renderer::shutdown() {
 	while (!sprites.empty()) {
 		sprites.pop();

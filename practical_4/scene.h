@@ -3,6 +3,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "levelsystem.h"
 #include "entity.h"
 #include "ecm.h"
 

@@ -22,7 +22,6 @@ double PlayerMovementComponent::_momentum(double * timer) {
 		*timer = 0;
 	}
 
-	cout << move << endl;
 	return move;
 	
 }
@@ -94,8 +93,13 @@ void PlayerMovementComponent::update(double dt) {
 	x += (moveLeft * dt) + (moveRight * dt);
 	y += (moveUp * dt) + (moveDown * dt);
 	
-	_parent->setPosition({x, y});
+	float moveX = (moveLeft * dt) + (moveRight * dt);
+	float moveY = (moveUp * dt) + (moveDown * dt);
 	
+	float floatX = (float)moveX;
+	float floatY = (float)moveY;
+	
+	move({floatX, floatY});
 	
 }
 

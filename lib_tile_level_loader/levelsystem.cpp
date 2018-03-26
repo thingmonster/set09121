@@ -23,7 +23,8 @@ std::map<LevelSystem::TILE, sf::Color> LevelSystem::_colours {
 	{START, Color::Red}, 
 	{END, Color::Green}, 
 	{EMPTY, Color::Black}, 
-	{WAYPOINT, Color::Blue}
+	{WAYPOINT, Color::Blue},
+	{ENEMY, Color::Black}
 };
 
 
@@ -49,6 +50,15 @@ LevelSystem::TILE LevelSystem::getTileAt(sf::Vector2f v) {
 	return _tiles[index];
 }
 
+LevelSystem::TILE LevelSystem::getTileFromScreenCoords(sf::Vector2f v) {
+	
+	size_t x = floor(v.x) / _tileSize;
+	size_t y = floor(v.y) / _tileSize;
+	
+	size_t index = (y * _width) + x;
+	return _tiles[index];
+}
+
 LevelSystem::TILE LevelSystem::getTile(sf::Vector2ul v) {
 	
 	size_t index = (v.y * _width) + v.x;
@@ -62,11 +72,18 @@ sf::Vector2f LevelSystem::getTilePosition(sf::Vector2ul v) {
 	return {xPos, yPos};	
 }
 
+sf::Vector2f LevelSystem::getTileCentre(sf::Vector2ul v) {
+	
+	float xPos = v.x * _tileSize + _tileSize / 2;
+	float yPos = v.y * _tileSize + _tileSize / 2;
+	return {xPos, yPos};	
+}
+
 sf::Vector2f LevelSystem::getTileCoordinates(TILE t) {
 	
 	size_t index;
 	
-	for (size_t i = 0; i < 40; i++) {
+	for (size_t i = 0; i < _width * _height; i++) {
 		if (_tiles[i] == t) {
 			index = i;
 		}
@@ -83,6 +100,28 @@ sf::Vector2f LevelSystem::getTileCoordinates(TILE t) {
 	return coords;
 }
 
+vector<sf::Vector2ul> LevelSystem::findTiles(TILE t) {
+	
+	vector<sf::Vector2ul> coords;
+	
+	size_t x;
+	size_t y;
+	sf::Vector2ul v = {0,0};
+	
+	
+	for (size_t i = 0; i < _width * _height; i++) {
+		if (_tiles[i] == t) {
+			
+			size_t x = (i % _width);
+			size_t y = floor(i / _width);
+			v = {x,y};
+			coords.push_back(v);
+	
+		}
+	}
+	
+	return coords;
+}
 
 sf::Color LevelSystem::getColor(LevelSystem::TILE t) {
 	auto it = _colours.find(t);
@@ -135,6 +174,9 @@ void LevelSystem::loadLevelFile(const std::string &path, float tileSize) {
 			case '+':
 				temp_tiles.push_back(WAYPOINT);
 				break;
+			case 'n':
+				temp_tiles.push_back(ENEMY);
+				break;
 			case '\n':
 				if (w == 0) {
 					w = i;
@@ -142,10 +184,10 @@ void LevelSystem::loadLevelFile(const std::string &path, float tileSize) {
 				h++;
 				break;
 			default:
-				cout << c << endl;
+				// cout << c << endl;
+				;
 		}
 	}
-	
 	if (temp_tiles.size() != (w * h)) {
 		throw string("Can't parse level file: ") + path;
 	}
@@ -171,8 +213,6 @@ void LevelSystem::buildSprites() {
 			s->setFillColor(getColor(getTile({x, y})));
 			_sprites.push_back(move(s)); 
 		}
-		cout << endl;
-		cout << endl;
 	}
 }
 

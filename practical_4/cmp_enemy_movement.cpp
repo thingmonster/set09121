@@ -31,13 +31,20 @@ void EnemyMovementComponent::update(double dt) {
 	
 	// update ghost's position
 		
-	float x = _parent->getPosition().x;
-	float y = _parent->getPosition().y;
+	// float x = _parent->getPosition().x;
+	// float y = _parent->getPosition().y;
 	
-	x += moveX * dt;
-	y += moveY * dt;
+	// x += moveX * dt;
+	// y += moveY * dt;
 	
-	_parent->setPosition({x, y});
+	moveX *= dt;
+	moveY *= dt;
+	
+	float floatX = (float)moveX;
+	float floatY = (float)moveY;
+	
+	move({floatX, floatY});
+	
 	
 	
 }

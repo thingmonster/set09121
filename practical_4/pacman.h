@@ -16,7 +16,7 @@ class GameScene : public Scene {
 	private:
 		sf::Text text;
 		sf::Clock scoreClock;
-		void respawn();
+		void respawn(std::shared_ptr<Entity> e);
 		
 	
 	public:

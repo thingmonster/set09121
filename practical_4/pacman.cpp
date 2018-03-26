@@ -3,8 +3,6 @@
 #include "pacman.h"
 #include "system_renderer.h"
 
-#define GHOSTS_COUNT 4
-
 using namespace sf;
 using namespace std;
 
@@ -32,23 +30,23 @@ void GameScene::update(double dt) {
 
 void GameScene::render() {
 	_ents.render();
+	ls::render(Renderer::getWindow());
 }
 
 void GameScene::load() {
 
-	static sf::Clock clock;
-	const float asd = clock.restart().asSeconds();
-
+	ls::loadLevelFile("res/pacman.txt", 23);
+	
 	auto pl = make_shared<Entity>();
-	pl->setPosition(Vector2f(400.f, 400.f));
 	
 	auto s = pl->addComponent<ShapeComponent>();
 	auto m = pl->addComponent<PlayerMovementComponent>();
-	s->setShape<sf::CircleShape>(12.f);
+	s->setShape<sf::CircleShape>(10.f);
 	s->getShape().setFillColor({208 , 62, 25});
-	s->getShape().setOrigin(Vector2f(12.f, 12.f));
+	s->getShape().setOrigin(Vector2f(10.f, 10.f));
 	_ents.list.push_back(pl);
 	
+	GameScene::respawn(pl);
 	
 	const sf::Color ghost_cols[]{
 		{208,62,25},
@@ -57,19 +55,48 @@ void GameScene::load() {
 		{234,130,229}
 	};
 	
-	for (int i = 0; i < GHOSTS_COUNT; ++i) {
+	auto enemies = ls::findTiles(ls::ENEMY);
+	
+	// for (int i = 0; i < enemies.size(); ++i) {
+	for (int i = 0; i < 1; ++i) {
 		auto ghost = make_shared<Entity>();
 		auto s = ghost->addComponent<ShapeComponent>();
 		auto m = ghost->addComponent<EnemyMovementComponent>();
-		s->setShape<sf::CircleShape>(12.f);
+		s->setShape<sf::CircleShape>(10.f);
 		s->getShape().setFillColor(ghost_cols[i%4]);
-		s->getShape().setOrigin(Vector2f(12.f, 12.f));
-		ghost->setPosition(Vector2f(i*50.f, i*50.f));
+		s->getShape().setOrigin(Vector2f(10.f, 10.f));
 		_ents.list.push_back(ghost);
+		GameScene::respawn(ghost);
+		
+		ghost->setPosition(ls::getTileCentre(ls::findTiles(ls::ENEMY)[i]));
 	}
 
 	
+	
 }
+
+void GameScene::respawn(std::shared_ptr<Entity> e) {
+	
+	cout << "respawn" << endl;
+	
+	std::vector<std::shared_ptr<PlayerMovementComponent>> playerComponents = 
+		e->getComponents<PlayerMovementComponent>();
+	
+	if (playerComponents.size() > 0) {
+		e->setPosition(ls::getTileCentre(ls::findTiles(ls::START)[0]));
+		e->GetCompatibleComponent<ActorMovementComponent>()[0]->setSpeed(150.f);
+	}
+	
+	std::vector<std::shared_ptr<EnemyMovementComponent>> enemyComponents = 
+		e->getComponents<EnemyMovementComponent>();
+	
+	if (enemyComponents.size() > 0) {
+		e->GetCompatibleComponent<ActorMovementComponent>()[0]->setSpeed(150.f);
+	}
+}
+
+
+
 
 
 
