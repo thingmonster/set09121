@@ -2,12 +2,13 @@
 #pragma once
 #include "entity.h"
 #include "ecm.h"
+#include <SFML/Graphics.hpp>
 
 class ShapeComponent : public Component {
 	
 	protected:
 		std::shared_ptr<sf::Shape> _shape;
-		Entity * _parent;
+		// Entity * _parent;
 	
 	public:
 		ShapeComponent() = delete;

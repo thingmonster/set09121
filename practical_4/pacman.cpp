@@ -22,14 +22,12 @@ GameScene::GameScene() : Scene() {cout << "GAMESCENE" << endl;}
 
 void GameScene::update(double dt) {
 	
-	cout << "GS update" << endl;
-	
 	if (Keyboard :: isKeyPressed(Keyboard :: Tab)) {
 		activeScene = menuScene;
 	}
 	
 	// Scene::update(dt);
-	em.update(dt);
+	_ents.update(dt);
 }
 
 void GameScene::render() {
@@ -38,13 +36,19 @@ void GameScene::render() {
 
 void GameScene::load() {
 
+	static sf::Clock clock;
+	const float asd = clock.restart().asSeconds();
+
 	auto pl = make_shared<Entity>();
+	pl->setPosition(Vector2f(400.f, 400.f));
+	
 	auto s = pl->addComponent<ShapeComponent>();
+	// auto m = pl->addComponent<ActorMovementComponent>();
 	s->setShape<sf::CircleShape>(12.f);
 	s->getShape().setFillColor({208 , 62, 25});
 	s->getShape().setOrigin(Vector2f(12.f, 12.f));
-	s->getShape().setPosition(Vector2f(300.f, 300.f));
 	_ents.list.push_back(pl);
+	
 	
 	const sf::Color ghost_cols[]{
 		{208,62,25},
@@ -59,7 +63,7 @@ void GameScene::load() {
 		s->setShape<sf::CircleShape>(12.f);
 		s->getShape().setFillColor(ghost_cols[i%4]);
 		s->getShape().setOrigin(Vector2f(12.f, 12.f));
-		s->getShape().setPosition(Vector2f(i*50.f, i*50.f));
+		ghost->setPosition(Vector2f(i*50.f, i*50.f));
 		_ents.list.push_back(ghost);
 	}
 

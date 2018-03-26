@@ -17,6 +17,7 @@ const Vector2f Entity::getPosition() {
 }
 
 void Entity::setPosition(const Vector2f &pos) {
+	cout << "setppos " << pos.x << endl;
 	_position = pos;
 }
 
@@ -29,14 +30,18 @@ void Entity::move(const Vector2f &pos) {
 }
 
 void Entity::update(const double dt) {
-	_shape->setPosition(_position);
+	// _shape->setPosition(_position);
 }
 
-Entity::Entity(unique_ptr<Shape> s) : _radius(25.f), _shape(std::move(s)) {
+// Entity::Entity(unique_ptr<Shape> s) : _radius(25.f), _shape(std::move(s)) {
+// }
+
+Entity::Entity(unique_ptr<Shape> s) : _radius(25.f) {
 }
 
 Entity::Entity() {
 }
+
 
 
 
@@ -64,7 +69,7 @@ Entity::Entity() {
 	
 	
 	
-Component::Component(Entity *p) {}
+Component::Component(Entity *p) {_parent = p;}
 void Component::update(double dt) {}
 void Component::render() {}
 	

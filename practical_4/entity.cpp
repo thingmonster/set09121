@@ -10,13 +10,14 @@ using namespace std;
 void EntityManager::update(double dt) {
 	
 	for (auto &e : list) {
-		e->update(dt);
+		for (auto &c : e->_components) {
+			c->update(dt);
+		}
 	}
 }
 	
 void EntityManager::render() {
 	for (auto &e : list) {
-		cout << e->_components.size() << endl;
 		for (auto &c : e->_components) {
 			c->render();
 		}
