@@ -9,6 +9,7 @@
 #include "cmp_sprite.h"
 #include "cmp_actor_movement.h"
 #include "cmp_player_movement.h"
+#include "cmp_enemy_movement.h"
 #include "levelsystem.h"
 
 

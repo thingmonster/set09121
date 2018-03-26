@@ -17,7 +17,6 @@ const Vector2f Entity::getPosition() {
 }
 
 void Entity::setPosition(const Vector2f &pos) {
-	cout << "setppos " << pos.x << endl;
 	_position = pos;
 }
 

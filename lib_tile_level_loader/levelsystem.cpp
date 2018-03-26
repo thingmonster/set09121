@@ -43,6 +43,12 @@ float LevelSystem::getTileSize() {
 
 
 
+LevelSystem::TILE LevelSystem::getTileAt(sf::Vector2f v) {
+	
+	size_t index = (v.y * _width) + v.x;
+	return _tiles[index];
+}
+
 LevelSystem::TILE LevelSystem::getTile(sf::Vector2ul v) {
 	
 	size_t index = (v.y * _width) + v.x;

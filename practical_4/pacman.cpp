@@ -43,7 +43,7 @@ void GameScene::load() {
 	pl->setPosition(Vector2f(400.f, 400.f));
 	
 	auto s = pl->addComponent<ShapeComponent>();
-	// auto m = pl->addComponent<ActorMovementComponent>();
+	auto m = pl->addComponent<PlayerMovementComponent>();
 	s->setShape<sf::CircleShape>(12.f);
 	s->getShape().setFillColor({208 , 62, 25});
 	s->getShape().setOrigin(Vector2f(12.f, 12.f));
@@ -60,6 +60,7 @@ void GameScene::load() {
 	for (int i = 0; i < GHOSTS_COUNT; ++i) {
 		auto ghost = make_shared<Entity>();
 		auto s = ghost->addComponent<ShapeComponent>();
+		auto m = ghost->addComponent<EnemyMovementComponent>();
 		s->setShape<sf::CircleShape>(12.f);
 		s->getShape().setFillColor(ghost_cols[i%4]);
 		s->getShape().setOrigin(Vector2f(12.f, 12.f));

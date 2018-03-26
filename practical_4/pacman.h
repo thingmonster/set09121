@@ -5,6 +5,7 @@
 #include "cmp_sprite.h"
 #include "cmp_actor_movement.h"
 #include "cmp_player_movement.h"
+#include "cmp_enemy_movement.h"
 
 extern std::shared_ptr<Scene> gameScene;
 extern std::shared_ptr<Scene> menuScene;
