@@ -41,6 +41,10 @@ float LevelSystem::getTileSize() {
 	return _tileSize;
 }
 
+sf::Vector2ul LevelSystem::screenCoordsToIndexes(sf::Vector2f pos) {
+	pos /= _tileSize;
+	return (Vector2ul)pos;
+}
 
 
 

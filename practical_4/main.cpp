@@ -17,7 +17,7 @@ using namespace sf;
 using namespace std;
 
 static int gameWidth = 800;
-static int gameHeight = 600;
+static int gameHeight = 700;
 
 void reset() {
 	

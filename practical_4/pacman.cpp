@@ -58,7 +58,7 @@ void GameScene::load() {
 	auto enemies = ls::findTiles(ls::ENEMY);
 	
 	// for (int i = 0; i < enemies.size(); ++i) {
-	for (int i = 0; i < 1; ++i) {
+	for (int i = 0; i < 4; ++i) {
 		auto ghost = make_shared<Entity>();
 		auto s = ghost->addComponent<ShapeComponent>();
 		auto m = ghost->addComponent<EnemyMovementComponent>();
@@ -77,8 +77,6 @@ void GameScene::load() {
 
 void GameScene::respawn(std::shared_ptr<Entity> e) {
 	
-	cout << "respawn" << endl;
-	
 	std::vector<std::shared_ptr<PlayerMovementComponent>> playerComponents = 
 		e->getComponents<PlayerMovementComponent>();
 	
@@ -91,7 +89,7 @@ void GameScene::respawn(std::shared_ptr<Entity> e) {
 		e->getComponents<EnemyMovementComponent>();
 	
 	if (enemyComponents.size() > 0) {
-		e->GetCompatibleComponent<ActorMovementComponent>()[0]->setSpeed(150.f);
+		e->GetCompatibleComponent<ActorMovementComponent>()[0]->setSpeed(100.f);
 	}
 }
 

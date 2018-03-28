@@ -26,6 +26,7 @@ class LevelSystem {
 		static sf::Vector2f getTileCentre(sf::Vector2ul v);
 		static std::vector<sf::Vector2ul> findTiles(TILE t);
 		static sf::Vector2f getTileCoordinates(TILE t);
+		static sf::Vector2ul screenCoordsToIndexes(sf::Vector2f);
 		
 	protected:
 		static std::unique_ptr<TILE[]> _tiles;
