@@ -12,7 +12,8 @@ std::shared_ptr<Scene> gameScene;
 std::shared_ptr<Scene> menuScene;
 std::shared_ptr<Scene> activeScene;
 
-EntityManager em;
+vector<shared_ptr<Entity>> ghosts;
+shared_ptr<Entity> player;
 
 
 
@@ -24,8 +25,18 @@ void GameScene::update(double dt) {
 		activeScene = menuScene;
 	}
 	
-	// Scene::update(dt);
-	_ents.update(dt);
+	bool dead = false;
+	for (auto& g : ghosts) {
+		if (length(g->getPosition() - player->getPosition()) < 30.0f) {
+			respawn();
+			dead = true;
+		}
+	} 
+	
+	if (!dead) {
+		// Scene::update(dt);
+		_ents.update(dt);
+	}
 }
 
 void GameScene::render() {
@@ -37,16 +48,27 @@ void GameScene::load() {
 
 	ls::loadLevelFile("res/pacman.txt", 23);
 	
-	auto pl = make_shared<Entity>();
+	respawn();
 	
+}
+
+void GameScene::respawn() {
+	
+	_ents.list.clear();
+	player.reset();
+	ghosts.clear();
+	
+	auto pl = make_shared<Entity>();
+	pl->setPosition(ls::getTileCentre(ls::findTiles(ls::START)[0]));
 	auto s = pl->addComponent<ShapeComponent>();
-	auto m = pl->addComponent<PlayerMovementComponent>();
 	s->setShape<sf::CircleShape>(10.f);
 	s->getShape().setFillColor({208 , 62, 25});
 	s->getShape().setOrigin(Vector2f(10.f, 10.f));
-	_ents.list.push_back(pl);
+	auto m = pl->addComponent<PlayerMovementComponent>();
+	m->setSpeed(150.f);
 	
-	GameScene::respawn(pl);
+	_ents.list.push_back(pl);
+	player = pl;
 	
 	const sf::Color ghost_cols[]{
 		{208,62,25},
@@ -59,38 +81,37 @@ void GameScene::load() {
 	
 	// for (int i = 0; i < enemies.size(); ++i) {
 	for (int i = 0; i < 4; ++i) {
+		
 		auto ghost = make_shared<Entity>();
+		ghost->setPosition(ls::getTileCentre(ls::findTiles(ls::ENEMY)[i]));
 		auto s = ghost->addComponent<ShapeComponent>();
-		auto m = ghost->addComponent<EnemyMovementComponent>();
 		s->setShape<sf::CircleShape>(10.f);
 		s->getShape().setFillColor(ghost_cols[i%4]);
 		s->getShape().setOrigin(Vector2f(10.f, 10.f));
+		auto m = ghost->addComponent<EnemyMovementComponent>();
+		m->setSpeed(100.f);
+	
 		_ents.list.push_back(ghost);
-		GameScene::respawn(ghost);
+		ghosts.push_back(ghost);
 		
-		ghost->setPosition(ls::getTileCentre(ls::findTiles(ls::ENEMY)[i]));
+		
 	}
 
 	
+	// std::vector<std::shared_ptr<PlayerMovementComponent>> playerComponents = 
+		// e->getComponents<PlayerMovementComponent>();
 	
-}
-
-void GameScene::respawn(std::shared_ptr<Entity> e) {
+	// if (playerComponents.size() > 0) {
+		// e->setPosition(ls::getTileCentre(ls::findTiles(ls::START)[0]));
+		// e->GetCompatibleComponent<ActorMovementComponent>()[0]->setSpeed(150.f);
+	// }
 	
-	std::vector<std::shared_ptr<PlayerMovementComponent>> playerComponents = 
-		e->getComponents<PlayerMovementComponent>();
+	// std::vector<std::shared_ptr<EnemyMovementComponent>> enemyComponents = 
+		// e->getComponents<EnemyMovementComponent>();
 	
-	if (playerComponents.size() > 0) {
-		e->setPosition(ls::getTileCentre(ls::findTiles(ls::START)[0]));
-		e->GetCompatibleComponent<ActorMovementComponent>()[0]->setSpeed(150.f);
-	}
-	
-	std::vector<std::shared_ptr<EnemyMovementComponent>> enemyComponents = 
-		e->getComponents<EnemyMovementComponent>();
-	
-	if (enemyComponents.size() > 0) {
-		e->GetCompatibleComponent<ActorMovementComponent>()[0]->setSpeed(100.f);
-	}
+	// if (enemyComponents.size() > 0) {
+		// e->GetCompatibleComponent<ActorMovementComponent>()[0]->setSpeed(100.f);
+	// }
 }
 
 
