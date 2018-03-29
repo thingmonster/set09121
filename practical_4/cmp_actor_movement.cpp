@@ -1,8 +1,5 @@
 
-#include <iostream>
-#include <SFML/Graphics.hpp>
 #include "cmp_actor_movement.h"
-#include "levelsystem.h"
 
 
 using namespace sf;

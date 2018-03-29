@@ -1,7 +1,5 @@
 
 #include "system_renderer.h"
-#include <queue>
-#include <iostream>
 
 using namespace sf;
 using namespace std;

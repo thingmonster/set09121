@@ -20,6 +20,14 @@ void Entity::setPosition(const Vector2f &pos) {
 	_position = pos;
 }
 
+void Entity::setForDelete() {
+	_fordeletion = true;
+}
+
+bool Entity::is_fordeletion() {
+	return _fordeletion;
+}
+
 float Entity::getRadius() {
 	return _radius;
 }
@@ -32,39 +40,51 @@ void Entity::update(const double dt) {
 	// _shape->setPosition(_position);
 }
 
-// Entity::Entity(unique_ptr<Shape> s) : _radius(25.f), _shape(std::move(s)) {
-// }
+Entity::Entity(Scene* s) : scene(s), _fordeletion(false) {}
 
-Entity::Entity(unique_ptr<Shape> s) : _radius(25.f) {
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+
+void EntityManager::update(double dt) {
+	
+	for (int i = 0; i < list.size(); i++) {
+		if (list[i]->is_fordeletion()) {
+			list.erase(list.begin() + i);
+			--i;
+			continue;
+		}
+	}
+	
+	for (auto &e : list) {
+		for (auto &c : e->_components) {
+			c->update(dt);
+		}
+	}
 }
-
-Entity::Entity() {
+	
+void EntityManager::render() {
+	for (auto &e : list) {
+		for (auto &c : e->_components) {
+			c->render();
+		}
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// void EntityManager::update(double dt) {
 	
-	// for (auto &e : list) {
-		// e->update(dt);
-	// }
-// }
 	
-// void EntityManager::render() {
 	
-	// for (auto &e : list) {
-		// e->render();
-	// }
-// }
+	
+	
+	
 	
 	
 	

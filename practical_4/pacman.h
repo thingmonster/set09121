@@ -1,11 +1,5 @@
 #pragma once
-#include "ecm.h"
 #include "scene.h"
-#include "system_renderer.h"
-#include "cmp_sprite.h"
-#include "cmp_actor_movement.h"
-#include "cmp_player_movement.h"
-#include "cmp_enemy_movement.h"
 
 extern std::shared_ptr<Scene> gameScene;
 extern std::shared_ptr<Scene> menuScene;
@@ -17,6 +11,8 @@ class GameScene : public Scene {
 		sf::Text text;
 		sf::Clock scoreClock;
 		void respawn();
+		shared_ptr<Entity> makeNibble(const Vector2ul& nl, bool big);
+		shared_ptr<Entity> makeEntity();
 		
 	
 	public:

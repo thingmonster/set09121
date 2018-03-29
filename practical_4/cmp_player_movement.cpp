@@ -1,5 +1,4 @@
 
-#include <iostream>
 #include "cmp_player_movement.h"
 
 using namespace sf;

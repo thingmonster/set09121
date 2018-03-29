@@ -10,24 +10,27 @@ using namespace sf;
 using namespace std;
 
 class Component;
+class Scene;
 
 class Entity {
 	
 	protected:
-		// std::unique_ptr<sf::Shape> _shape;
 		sf::Vector2f _position;
-		Entity(std::unique_ptr<sf::Shape> shp);
 		float _radius;
+		bool _fordeletion;
 		
 	public:
-		Entity();
+		Entity(Scene* s);
 		~Entity() = default;
+		Scene* const scene;
 		void update(const double dt);
 		void render();
 		const sf::Vector2f getPosition();
 		void setPosition(const sf::Vector2f &pos);
 		void move(const sf::Vector2f &pos);
 		float getRadius();
+		void setForDelete();
+		bool is_fordeletion();
 		std::vector<std::shared_ptr<Component>> _components;
 		
 	template <typename T, typename... Targs>
@@ -82,6 +85,12 @@ class Component {
 		virtual void update(double dt) = 0;
 		virtual void render() = 0;
 		
+};
+
+struct EntityManager {
+	std::vector<std::shared_ptr<Entity>> list;
+	void update(double dt);
+	void render();
 };
 
 

@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "cmp_actor_movement.h"
 #include <SFML/Graphics.hpp>
 

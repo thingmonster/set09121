@@ -1,19 +1,11 @@
 
 
-#include <iostream>	
 #include "cmp_sprite.h"
-#include "entity.h"
-#include "ecm.h"
-#include "system_renderer.h"
 
 
 
 using namespace sf;
 using namespace std;
-
-// void SpriteComponent::update(double dt) {
-	// _sprite->setPosition(_parent->getPosition());
-// }
 
 void ShapeComponent::update(double dt) {
 	_shape->setPosition(_parent->getPosition());

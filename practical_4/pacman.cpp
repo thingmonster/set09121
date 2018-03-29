@@ -1,7 +1,5 @@
-#include <iostream>	
-#include <SFML/Graphics.hpp>
+
 #include "pacman.h"
-#include "system_renderer.h"
 
 using namespace sf;
 using namespace std;
@@ -12,9 +10,18 @@ std::shared_ptr<Scene> gameScene;
 std::shared_ptr<Scene> menuScene;
 std::shared_ptr<Scene> activeScene;
 
-vector<shared_ptr<Entity>> ghosts;
 shared_ptr<Entity> player;
+vector<shared_ptr<Entity>> ghosts;
+vector<shared_ptr<Entity>> nibbles;
 
+
+
+
+shared_ptr<Entity> GameScene::makeEntity() {
+	auto e = make_shared<Entity>(this);
+  _ents.list.push_back(e);
+	return e;
+}
 
 
 GameScene::GameScene() : Scene() {cout << "GAMESCENE" << endl;}
@@ -54,11 +61,45 @@ void GameScene::load() {
 
 void GameScene::respawn() {
 	
+	// remove old entities
+	
 	_ents.list.clear();
 	player.reset();
+	
+	for (auto g : ghosts) {
+		g.reset();
+	}
 	ghosts.clear();
 	
-	auto pl = make_shared<Entity>();
+	for (auto n : nibbles) {
+		n->setForDelete();
+		n.reset();
+	}
+	nibbles.clear();
+	
+	// add nibbles
+	
+	auto nibbleLoc = ls::findTiles(ls::EMPTY);
+	for (const auto& nl : nibbleLoc) {
+		auto cherry = GameScene::makeNibble(nl, false);
+		// _ents.list.push_back(cherry);
+		nibbles.push_back(cherry);		
+	}
+	
+	nibbleLoc = ls::findTiles(ls::WAYPOINT);
+	for (const auto& nl : nibbleLoc) {
+		auto cherry = GameScene::makeNibble(nl, true);
+		// _ents.list.push_back(cherry);
+		nibbles.push_back(cherry);		
+	}
+	
+	
+	// add player
+	
+	
+	
+	// auto pl = make_shared<Entity>();
+	auto pl = GameScene::makeEntity();
 	pl->setPosition(ls::getTileCentre(ls::findTiles(ls::START)[0]));
 	auto s = pl->addComponent<ShapeComponent>();
 	s->setShape<sf::CircleShape>(10.f);
@@ -67,8 +108,11 @@ void GameScene::respawn() {
 	auto m = pl->addComponent<PlayerMovementComponent>();
 	m->setSpeed(150.f);
 	
-	_ents.list.push_back(pl);
+	// _ents.list.push_back(pl);
 	player = pl;
+	
+	
+	// add ghosts
 	
 	const sf::Color ghost_cols[]{
 		{208,62,25},
@@ -82,7 +126,7 @@ void GameScene::respawn() {
 	// for (int i = 0; i < enemies.size(); ++i) {
 	for (int i = 0; i < 4; ++i) {
 		
-		auto ghost = make_shared<Entity>();
+		auto ghost = GameScene::makeEntity();
 		ghost->setPosition(ls::getTileCentre(ls::findTiles(ls::ENEMY)[i]));
 		auto s = ghost->addComponent<ShapeComponent>();
 		s->setShape<sf::CircleShape>(10.f);
@@ -91,7 +135,7 @@ void GameScene::respawn() {
 		auto m = ghost->addComponent<EnemyMovementComponent>();
 		m->setSpeed(100.f);
 	
-		_ents.list.push_back(ghost);
+		// _ents.list.push_back(ghost);
 		ghosts.push_back(ghost);
 		
 		
@@ -114,8 +158,31 @@ void GameScene::respawn() {
 	// }
 }
 
+shared_ptr<Entity> GameScene::makeNibble(const Vector2ul& nl, bool big) {
+	
+	float size;
+	if (big) {
+		size = 4.f;
+	} else {
+		size = 2.f;
+	}
+		
+	
+	auto cherry = GameScene::makeEntity();
+	cherry->addComponent<PickupComponent>(big);
+	cherry->setPosition(ls::getTilePosition(nl) + Vector2f(ls::getTileSize() / 2, ls::getTileSize() / 2));
+	
+	auto s = cherry->addComponent<ShapeComponent>();
+	s->setShape<sf::CircleShape>(size);
+	s->getShape().setFillColor({208 , 208, 150});
+	s->getShape().setOrigin(Vector2f(size, size));
+	
+	return cherry;
+}
 
-
+std::vector<std::shared_ptr<Entity>>& Scene::getEnts() {
+	return _ents.list;
+}
 
 
 
